@@ -81,7 +81,7 @@ void assign_ent(char side, node* branch, char swap[2][8][8])
 
 void PawnAI(char swap[2][8][8], char side, int i,int j, node* root)
 {
-    printf("pawn %d %d %c\n",i,j,side);
+    //printf("pawn %d %d %c\n",i,j,side);
     int outer;
     int inner;
     if(side== '1')
@@ -154,7 +154,7 @@ void PawnAI(char swap[2][8][8], char side, int i,int j, node* root)
 
 void KnightAI(char swap[2][8][8], char side, int i, int j, node* root)
 {
-    printf("knight %d %d %c\n",i,j,side);
+    //printf("knight %d %d %c\n",i,j,side);
     int moves[16] = {i+2,j-1,i+2,j+1,i-2,j-1,i-2,j+1,i+1,j+2,i+1,j-2,i-1,j+2,i-1,j-2};
     int outer = 0;
     int inner =1;
@@ -187,7 +187,7 @@ void KnightAI(char swap[2][8][8], char side, int i, int j, node* root)
 
 void BishopAI(char swap[2][8][8],char side, int i, int j, node* root)
 {
-    printf("bishop %d %d %c\n",i,j,side);
+    //printf("bishop %d %d %c\n",i,j,side);
     int moves[56];
     int i1=i;
     int j1=j;
@@ -262,7 +262,7 @@ void BishopAI(char swap[2][8][8],char side, int i, int j, node* root)
 
 void RookAI(char swap[2][8][8], char side, int i, int j, node* root)
 {
-    printf("rook %d %d %c\n",i,j,side);
+    //printf("rook %d %d %c\n",i,j,side);
     int moves[56];
     int i1,i2,i3,i4 = i;
     int j1,j2,j3,j4 = j;
@@ -324,15 +324,15 @@ void RookAI(char swap[2][8][8], char side, int i, int j, node* root)
 
 void QueenAI(char swap[2][8][8], char side, int i, int j, node *root)
 {
-    printf("queen %d %d %c\n",i,j,side);
+    //printf("queen %d %d %c\n",i,j,side);
     BishopAI(swap,side,i,j,root);
     RookAI(swap,side,i,j,root);
-    printf("queen ends %d %d %c\n",i,j,side);
+    //printf("queen ends %d %d %c\n",i,j,side);
 }
 
 void KingAI(char swap[2][8][8],char side, int i, int j,node *root)
 {
-    printf("king %d %d %c\n",i,j,side);
+    //printf("king %d %d %c\n",i,j,side);
     int moves[16] = {i+1,j,i+1,j+1,i+1,j-1,i,j-1,i,j+1,i-1,j,i-1,j-1,i-1,j+1};
     int outer = 0;
     int inner =1;
@@ -372,7 +372,7 @@ void common_init(int i1, int j1, int k1, int l1, char swap[2][8][8], node *root,
     char finl_ent  = swap[0][k1][l1];
 
     int error = compute(init_ent, i1, j1, k1, l1, 1, swap);
-    printf("error %d    ",error);
+    //printf("error %d    ",error);
 
     if(error == 0)
     {
@@ -559,7 +559,7 @@ void AIfunc(char origin[2][8][8])
     else
        maxim_val = 3*maxim_val;
        
-    printf("maxim_val %d\n",maxim_val);
+    //printf("maxim_val %d\n",maxim_val);
     z =0;
 
     for(z;z<=99; z++)
@@ -657,7 +657,7 @@ void AIfunc(char origin[2][8][8])
        }
     };
 
-    printf("min_dcntr = %d\n",min_dcntr);
+    //printf("min_dcntr = %d\n",min_dcntr);
     int ind_array[60];
     z =0;
     for(z; z<=59; z++)
@@ -823,13 +823,13 @@ void AIfunc(char origin[2][8][8])
        }
     };
 
-    printf("i am here\n");                 /*produces a random number for selecting*/ 
+    //printf("i am here\n");                 /*produces a random number for selecting*/ 
     end_array--;                           /*a move amongst equiprobable choices*/
     srand(time(NULL));
     z=0;
     z = rand()%(end_array+1);
     vic_shell=root->array[ind_rand[z]];
-    printf("i am there\n");
+    //printf("i am there\n");
 
     if(ult_vic_shell!=NULL)
     {
@@ -850,7 +850,7 @@ void AIfunc(char origin[2][8][8])
     }
 
     init_ent = origin[0][i1][j1];
-    printf("i1%d j1%d k1%d l1%d\n",i1,j1,k1,l1);
+    //printf("i1%d j1%d k1%d l1%d\n",i1,j1,k1,l1);
     z = compute(init_ent, i1, j1 ,k1, l1, 0, origin);
 
     FreeAll(root);    
