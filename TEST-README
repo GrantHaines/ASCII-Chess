@@ -1,0 +1,31 @@
+By Grant Haines
+
+To add a new test, do the following:
+1) Write test in "UnitTests.c" (you can use the existing test as a template)
+	Use the following assert functions:
+
+	#define CuFail(tc, message)
+	#define CuAssert(tc, message, condition)
+	#define CuAssertTrue(tc, condition)
+
+	#define CuAssertStrEquals(tc,expected,actual)
+	#define CuAssertStrEquals_Msg(tc,message,expected,actual)
+
+	#define CuAssertIntEquals(tc,expected,actual)
+	#define CuAssertIntEquals_Msg(tc,message,expected,actual)
+	#define CuAssertDblEquals(tc,expected,actual,dl)
+	#define CuAssertDblEquals_Msg(tc,message,expected,actual,dl)
+
+	#define CuAssertPtrEquals(tc,expected,actual)
+	#define CuAssertPtrEquals_Msg(tc,message,expected,actual)
+	#define CuAssertPtrNotNull(tc,pointer)
+	#define CuAssertPtrNotNullMsg(tc,message,pointer)
+
+	Lines 59-90 of "CuTest.h" may have more details.
+
+2) Add a line to the CuGetSuite() function in "UnitTests.c" of the form:
+	SUITE_ADD_TEST(suite, YOUR_TEST_HERE);
+
+To run the test suite, do the following:
+1) Run the command "gcc AllTests.c chess3.c AI.h CuTest.c CuTest.h UnitTests.c"
+2) Run "a.out --test" (just "a.out" will start the game)

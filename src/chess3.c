@@ -6,6 +6,8 @@
 #include <stdlib.h>  
 #include <unistd.h>
 #include "AI.h"
+//Added by Grant for testing:
+#include "CuTest.h"
 
 /* 1 = PAWN
  * 2 = KNIGHT
@@ -18,8 +20,16 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int cond, char chess[2][8][8]
 void printing(char chp [2][8][8]);
 
 
-int main()
+int main(int argc, char *argv[])
 {
+  // Added by Grant for testing
+
+  if (argc == 2 && strcmp(argv[1], "--test") == 0) {
+	  RunAllTests();
+  }
+  else {
+
+  //Original program
     char chess[2][8][8]={
                         {
                         {'5','4','2','9','7','2','4','5'},
@@ -277,7 +287,9 @@ int main()
   }
 
  }
+  }
    END:
+  
    return 0;
 }
 
