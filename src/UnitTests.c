@@ -75,7 +75,9 @@ void TestPawnMovement(CuTest* tc)
 	}
 }
 
-void TestPlayer2PawnMovement(CuTest* tc)
+/* WHEN MOVING PLAYER 2 PAWN FROM START, USE THE FUNCTION: "TESTPLAYER2PAWN...FROMSTART" */
+
+void TestPlayer2PawnMovementForward(CuTest* tc)
 {
 	char initialg1[2][8][8] = {
 	{
@@ -125,6 +127,12 @@ void TestPlayer2PawnMovement(CuTest* tc)
 
 	compute('1', 7, 0, 6, 0, 0, initialg1);
 	//compute('piecenumber', initialrow, initialcol, endrow, endcol, 0, initial);
+	/* To test all possible outcomes: 
+		endrow = initialrow - 1
+		endcol = initialcol
+
+		DONT FORGET TO CHANGE THE BOARDS APPROPIATELY!!
+		*/
 
 	int i, j, k;
 	
@@ -138,8 +146,70 @@ void TestPlayer2PawnMovement(CuTest* tc)
 	}
 }
 
+void TestPlayer2PawnMovementForwardFromStart(CuTest* tc)
+{
+	char initialg11[2][8][8] = {
+	{
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{'1',' ',' ',' ',' ',' ',' ',' '},
+	},
+	{
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{'1',' ',' ',' ',' ',' ',' ',' '},
+	}
+	};
 
-void TestQueenMovement1(CuTest* tc)
+	char expectedg11[2][8][8] = {
+	{
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{'1',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	},
+	{
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{'1',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	}
+	};
+
+	compute('1', 7, 0, 6, 0, 0, initialg11);
+	//compute('piecenumber', initialrow, initialcol, endrow, endcol, 0, initial);
+
+	int i, j, k;
+	
+	//Compare result with expected chess board
+	for (i = 0; i < 2; i++) {
+		for (j = 0; j < 8; j++) {
+			for (k = 0; k < 8; k++) {
+				CuAssertTrue(tc, (initialg11[i][j][k] == expectedg11[i][j][k]));
+			}
+		}
+	}
+}
+
+void TestQueenMovementForward(CuTest* tc)
 {
 	char initialg2[2][8][8] = {
 	{
@@ -203,7 +273,7 @@ void TestQueenMovement1(CuTest* tc)
 	}
 }
 
-void TestQueenMovement2(CuTest* tc)
+void TestQueenMovementBackward(CuTest* tc)
 {
 	char initialg3[2][8][8] = {
 	{
@@ -267,7 +337,7 @@ void TestQueenMovement2(CuTest* tc)
 	}
 }
 
-void TestQueenMovement3(CuTest* tc)
+void TestQueenMovementRight(CuTest* tc)
 {
 	char initialg4[2][8][8] = {
 	{
@@ -331,7 +401,7 @@ void TestQueenMovement3(CuTest* tc)
 	}
 }
 
-void TestQueenMovement4(CuTest* tc)
+void TestQueenMovementLeft(CuTest* tc)
 {
 	char initialg5[2][8][8] = {
 	{
@@ -395,7 +465,7 @@ void TestQueenMovement4(CuTest* tc)
 	}
 }
 
-void TestQueenMovement5(CuTest* tc)
+void TestQueenMovementDiagonalBR(CuTest* tc)
 {
 	char initialg6[2][8][8] = {
 	{
@@ -462,7 +532,7 @@ void TestQueenMovement5(CuTest* tc)
 	}
 }
 
-void TestQueenMovement6(CuTest* tc)
+void TestQueenMovementDiagonalBL(CuTest* tc)
 {
 	char initialg7[2][8][8] = {
 	{
@@ -529,7 +599,7 @@ void TestQueenMovement6(CuTest* tc)
 	}
 }
 
-void TestQueenMovement7(CuTest* tc)
+void TestQueenMovementDiagonalFL(CuTest* tc)
 {
 	char initialg8[2][8][8] = {
 	{
@@ -596,7 +666,7 @@ void TestQueenMovement7(CuTest* tc)
 	}
 }
 
-void TestQueenMovement8(CuTest* tc)
+void TestQueenMovementDiagonalFR(CuTest* tc)
 {
 	char initialg9[2][8][8] = {
 	{
@@ -710,15 +780,15 @@ CuSuite* CuGetSuite(void)
 
 	
 	//Unit Tests - Gavin
-	SUITE_ADD_TEST(suite, TestPlayer2PawnMovement);
-	SUITE_ADD_TEST(suite, TestQueenMovement1);
-	SUITE_ADD_TEST(suite, TestQueenMovement2);
-	SUITE_ADD_TEST(suite, TestQueenMovement3);
-	SUITE_ADD_TEST(suite, TestQueenMovement4);
-	SUITE_ADD_TEST(suite, TestQueenMovement5);
-	SUITE_ADD_TEST(suite, TestQueenMovement6);
-	SUITE_ADD_TEST(suite, TestQueenMovement7);
-	SUITE_ADD_TEST(suite, TestQueenMovement8);
+	SUITE_ADD_TEST(suite, TestPlayer2PawnMovementForward);
+	SUITE_ADD_TEST(suite, TestQueenMovementForward);
+	SUITE_ADD_TEST(suite, TestQueenMovementBackward);
+	SUITE_ADD_TEST(suite, TestQueenMovementRight);
+	SUITE_ADD_TEST(suite, TestQueenMovementLeft);
+	SUITE_ADD_TEST(suite, TestQueenMovementDiagonalBR);
+	SUITE_ADD_TEST(suite, TestQueenMovementDiagonalBL);
+	SUITE_ADD_TEST(suite, TestQueenMovementDiagonalFL);
+	SUITE_ADD_TEST(suite, TestQueenMovementDiagonalFR);
 
 	return suite;
 }
