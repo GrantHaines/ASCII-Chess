@@ -138,6 +138,7 @@ void TestPlayer2PawnMovement(CuTest* tc)
 	}
 }
 
+
 void TestQueenMovement1(CuTest* tc)
 {
 	char initialg2[2][8][8] = {
@@ -188,6 +189,7 @@ void TestQueenMovement1(CuTest* tc)
 
 	compute('7', 3, 3, 2, 3, 0, initialg2);
 	//compute('piecenumber', initialrow, initialcol, endrow, endcol, 0, initial);
+	/* To test all possible movements from initialg2, endrow = initialrow - x for [0 <= endrow <= 8], [x > 0] */
 
 	int i, j, k;
 	
@@ -251,6 +253,7 @@ void TestQueenMovement2(CuTest* tc)
 
 	compute('7', 3, 3, 4, 3, 0, initialg3);
 	//compute('piecenumber', initialrow, initialcol, endrow, endcol, 0, initial);
+	/* To test all possible movements from initialg3, endrow = initialrow + x for [0 <= endrow <= 8], [x > 0] */
 
 	int i, j, k;
 	
@@ -314,6 +317,7 @@ void TestQueenMovement3(CuTest* tc)
 
 	compute('7', 3, 3, 3, 4, 0, initialg4);
 	//compute('piecenumber', initialrow, initialcol, endrow, endcol, 0, initial);
+	/* To test all possible movements from initialg4, endcol = initialcol + x for [0 <= endcol <= 8], [x > 0] */
 
 	int i, j, k;
 	
@@ -377,6 +381,7 @@ void TestQueenMovement4(CuTest* tc)
 
 	compute('7', 3, 3, 3, 2, 0, initialg5);
 	//compute('piecenumber', initialrow, initialcol, endrow, endcol, 0, initial);
+	/* To test all possible movements from initialg5, endcol = initialcol - x for [0 <= endcol <= 8], [x > 0] */
 
 	int i, j, k;
 	
@@ -440,6 +445,10 @@ void TestQueenMovement5(CuTest* tc)
 
 	compute('7', 3, 3, 4, 4, 0, initialg6);
 	//compute('piecenumber', initialrow, initialcol, endrow, endcol, 0, initial);
+	/* To test all possible movements from initialg6 
+		endrow = initialrow + x for [0 <= endrow <= 8], [x > 0] 
+		endcol = initialcol + x for [0 <= endcol <= 8], [x > 0]
+		*/
 
 	int i, j, k;
 	
@@ -503,6 +512,10 @@ void TestQueenMovement6(CuTest* tc)
 
 	compute('7', 3, 3, 4, 2, 0, initialg7);
 	//compute('piecenumber', initialrow, initialcol, endrow, endcol, 0, initial);
+	/* To test all possible movements from initialg7 
+		endrow = initialrow + x for [0 <= endrow <= 8], [x > 0] 
+		endcol = initialcol - x for [0 <= endcol <= 8], [x > 0]
+		*/
 
 	int i, j, k;
 	
@@ -566,6 +579,10 @@ void TestQueenMovement7(CuTest* tc)
 
 	compute('7', 3, 3, 2, 2, 0, initialg8);
 	//compute('piecenumber', initialrow, initialcol, endrow, endcol, 0, initial);
+	/* To test all possible movements from initialg8 
+		endrow = initialrow - x for [0 <= endrow <= 8], [x > 0] 
+		endcol = initialcol - x for [0 <= endcol <= 8], [x > 0]
+		*/
 
 	int i, j, k;
 	
@@ -629,6 +646,10 @@ void TestQueenMovement8(CuTest* tc)
 
 	compute('7', 3, 3, 2, 4, 0, initialg9);
 	//compute('piecenumber', initialrow, initialcol, endrow, endcol, 0, initial);
+	/* To test all possible movements from initialg9 
+		endrow = initialrow - x for [0 <= endrow <= 8], [x > 0] 
+		endcol = initialcol + x for [0 <= endcol <= 8], [x > 0]
+		*/
 
 	int i, j, k;
 	
