@@ -3,14 +3,12 @@
 #include "CuTest.h"
 
 CuSuite* CuGetSuite();
-CuSuite* CuGetSuite();
 
 void RunAllTests(void)
 {
 	CuString *output = CuStringNew();
 	CuSuite* suite = CuSuiteNew();
 
-	CuSuiteAddSuite(suite, CuGetSuite());
 	CuSuiteAddSuite(suite, CuGetSuite());
 
 	CuSuiteRun(suite);
