@@ -209,6 +209,351 @@ void TestPlayer2PawnMovementForwardFromStart(CuTest* tc)
 	}
 }
 
+void TestPlayer2PawnMovementForwardTwoNotFromStart(CuTest* tc)
+{
+	char initialg12[2][8][8] = {
+	{
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{'1',' ',' ',' ',' ',' ',' ',' '},
+	},
+	{
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{'1',' ',' ',' ',' ',' ',' ',' '},
+	}
+	};
+
+	char expectedg12[2][8][8] = {
+	{
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{'1',' ',' ',' ',' ',' ',' ',' '},
+	},
+	{
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{'1',' ',' ',' ',' ',' ',' ',' '},
+	}
+	};
+
+	compute('1', 7, 0, 7, 0, 0, initialg12);
+	//compute('piecenumber', initialrow, initialcol, endrow, endcol, 0, initial);
+	/* To test all possible outcomes: 
+		endrow = initialrow - 1
+		endcol = initialcol
+
+		DONT FORGET TO CHANGE THE BOARDS APPROPIATELY!!
+		*/
+
+	int i, j, k;
+	
+	//Compare result with expected chess board
+	for (i = 0; i < 2; i++) {
+		for (j = 0; j < 8; j++) {
+			for (k = 0; k < 8; k++) {
+				CuAssertTrue(tc, (initialg12[i][j][k] == expectedg12[i][j][k]));
+			}
+		}
+	}
+}
+
+void TestPlayer2PawnMovementCannotMoveSideways(CuTest* tc)
+{
+	char initialg13[2][8][8] = {
+	{
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{'1',' ',' ',' ',' ',' ',' ',' '},
+	},
+	{
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{'1',' ',' ',' ',' ',' ',' ',' '},
+	}
+	};
+
+	char expectedg13[2][8][8] = {
+	{
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{'1',' ',' ',' ',' ',' ',' ',' '},
+	},
+	{
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{'1',' ',' ',' ',' ',' ',' ',' '},
+	}
+	};
+
+	compute('1', 7, 0, 7, 0, 0, initialg13);
+	//compute('piecenumber', initialrow, initialcol, endrow, endcol, 0, initial);
+	/* To test all possible outcomes: 
+		endrow = initialrow - 1
+		endcol = initialcol
+
+		DONT FORGET TO CHANGE THE BOARDS APPROPIATELY!!
+		*/
+
+	int i, j, k;
+	
+	//Compare result with expected chess board
+	for (i = 0; i < 2; i++) {
+		for (j = 0; j < 8; j++) {
+			for (k = 0; k < 8; k++) {
+				CuAssertTrue(tc, (initialg13[i][j][k] == expectedg13[i][j][k]));
+			}
+		}
+	}
+}
+
+void TestPlayer2PawnMovementCannotMoveDiagonal(CuTest* tc)
+{
+	char initialg14[2][8][8] = {
+	{
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{'1',' ',' ',' ',' ',' ',' ',' '},
+	},
+	{
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{'1',' ',' ',' ',' ',' ',' ',' '},
+	}
+	};
+
+	char expectedg14[2][8][8] = {
+	{
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{'1',' ',' ',' ',' ',' ',' ',' '},
+	},
+	{
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{'1',' ',' ',' ',' ',' ',' ',' '},
+	}
+	};
+
+	compute('1', 7, 0, 7, 0, 0, initialg14);
+	//compute('piecenumber', initialrow, initialcol, endrow, endcol, 0, initial);
+	/* To test all possible outcomes: 
+		endrow = initialrow - 1
+		endcol = initialcol
+
+		DONT FORGET TO CHANGE THE BOARDS APPROPIATELY!!
+		*/
+
+	int i, j, k;
+	
+	//Compare result with expected chess board
+	for (i = 0; i < 2; i++) {
+		for (j = 0; j < 8; j++) {
+			for (k = 0; k < 8; k++) {
+				CuAssertTrue(tc, (initialg14[i][j][k] == expectedg14[i][j][k]));
+			}
+		}
+	}
+}
+
+void TestPlayer2PawnMovementCannotMoveBackward(CuTest* tc)
+{
+	char initialg15[2][8][8] = {
+	{
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{'1',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	},
+	{
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{'1',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	}
+	};
+
+	char expectedg15[2][8][8] = {
+	{
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{'1',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	},
+	{
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{'1',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	}
+	};
+
+	compute('1', 6, 0, 6, 0, 0, initialg15);
+	//compute('piecenumber', initialrow, initialcol, endrow, endcol, 0, initial);
+	/* To test all possible outcomes: 
+		endrow = initialrow - 1
+		endcol = initialcol
+
+		DONT FORGET TO CHANGE THE BOARDS APPROPIATELY!!
+		*/
+
+	int i, j, k;
+	
+	//Compare result with expected chess board
+	for (i = 0; i < 2; i++) {
+		for (j = 0; j < 8; j++) {
+			for (k = 0; k < 8; k++) {
+				CuAssertTrue(tc, (initialg15[i][j][k] == expectedg15[i][j][k]));
+			}
+		}
+	}
+}
+
+void TestPlayer2PawnMovementCannotMoveIntoAlly(CuTest* tc)
+{
+	char initialg16[2][8][8] = {
+	{
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{'1',' ',' ',' ',' ',' ',' ',' '},
+	},
+	{
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{'1',' ',' ',' ',' ',' ',' ',' '},
+	}
+	};
+
+	char expectedg16[2][8][8] = {
+	{
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{'1',' ',' ',' ',' ',' ',' ',' '},
+	},
+	{
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{' ',' ',' ',' ',' ',' ',' ',' '},
+	{'1',' ',' ',' ',' ',' ',' ',' '},
+	}
+	};
+
+	compute('1', 7, 0, 7, 0, 0, initialg16);
+	//compute('piecenumber', initialrow, initialcol, endrow, endcol, 0, initial);
+	/* To test all possible outcomes: 
+		endrow = initialrow - 1
+		endcol = initialcol
+
+		DONT FORGET TO CHANGE THE BOARDS APPROPIATELY!!
+		*/
+
+	int i, j, k;
+	
+	//Compare result with expected chess board
+	for (i = 0; i < 2; i++) {
+		for (j = 0; j < 8; j++) {
+			for (k = 0; k < 8; k++) {
+				CuAssertTrue(tc, (initialg16[i][j][k] == expectedg16[i][j][k]));
+			}
+		}
+	}
+} 	
+
 void TestQueenMovementForward(CuTest* tc)
 {
 	char initialg2[2][8][8] = {
@@ -781,6 +1126,12 @@ CuSuite* CuGetSuite(void)
 	
 	//Unit Tests - Gavin
 	SUITE_ADD_TEST(suite, TestPlayer2PawnMovementForward);
+	SUITE_ADD_TEST(suite, TestPlayer2PawnMovementForwardFromStart);
+	SUITE_ADD_TEST(suite, TestPlayer2PawnMovementForwardTwoNotFromStart);
+	SUITE_ADD_TEST(suite, TestPlayer2PawnMovementCannotMoveBackward);
+	SUITE_ADD_TEST(suite, TestPlayer2PawnMovementCannotMoveDiagonal);
+	SUITE_ADD_TEST(suite, TestPlayer2PawnMovementCannotMoveIntoAlly);
+	SUITE_ADD_TEST(suite, TestPlayer2PawnMovementCannotMoveSideways);
 	SUITE_ADD_TEST(suite, TestQueenMovementForward);
 	SUITE_ADD_TEST(suite, TestQueenMovementBackward);
 	SUITE_ADD_TEST(suite, TestQueenMovementRight);
