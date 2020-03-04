@@ -3,7 +3,6 @@
 #include "CuTest.h"
 
 CuSuite* CuGetSuite();
-CuSuite* CuGetSuite();
 
 void RunAllTests(void)
 {
