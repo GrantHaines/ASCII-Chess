@@ -3695,6 +3695,7 @@ CuSuite* CuGetSuite(void)
 	SUITE_ADD_TEST(suite,TestKnightCanJump);
 	SUITE_ADD_TEST(suite,TestKnightNotKnight);
 	SUITE_ADD_TEST(suite,TestKnightInvalidMove);
+	
 	//Unit Tests - Gavin
 	SUITE_ADD_TEST(suite, TestPlayer2PawnMovementForward);
 	SUITE_ADD_TEST(suite, TestQueenMovementForward);
