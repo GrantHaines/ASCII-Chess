@@ -20,10 +20,10 @@
 */
 
 // Computes if a move is valid and performs it
-int compute(char ent1, int fromRow, int fromCol, int toRow, int toCol, int printErrors char board[2][8][8]);
+int compute(char ent1, int fromRow, int fromCol, int toRow, int toCol, int printErrors, char board[2][8][8]);
 
 // Checks that the pawn can move
-int checkPawnMove(int fromRow, int fromCol, int toRow, int toCol, int printErrors char board[2][8][8]);
+int checkPawnMove(int fromRow, int fromCol, int toRow, int toCol, int printErrors, char board[2][8][8]);
 
 // Prints the game board & instructions
 void printing(char chp [2][8][8]);
@@ -36,6 +36,7 @@ int main(int argc, char *argv[])
   if (argc == 2 && strcmp(argv[1], "--test") == 0) {
 	  RunAllTests();
   }
+
   else {
 
   //Original program
@@ -534,7 +535,7 @@ int KnightRules(char ent1, int fromRow, int fromCol, int toRow, int toCol, int p
   printErrors means condition for stopping printf statements
   when printErrors ==1 do not print
 */
-int compute(char ent1, int fromRow, int fromCol, int toRow, int toCol, int printErrors char board[2][8][8]) {
+int compute(char ent1, int fromRow, int fromCol, int toRow, int toCol, int printErrors, char board[2][8][8]) {
   int q=0;
 
   switch(ent1) {
