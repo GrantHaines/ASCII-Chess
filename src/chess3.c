@@ -200,7 +200,8 @@ int main(int argc, char *argv[])
             char y;
     
             if( (y = getchar() ) == 'y' || (y = getchar() )== 'Y')
-            goto END;
+            
+            return 0;
        }
 
 
@@ -298,7 +299,6 @@ int main(int argc, char *argv[])
 
  }
   }
-   END:
   
    return 0;
 }
