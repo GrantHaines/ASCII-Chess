@@ -20,7 +20,7 @@
 */
 
 // Computes if a move is valid and performs it
-int compute(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess[2][8][8]);
+int compute(char ent1, int fromRow, int fromCol, int toRow, int toCol, int printErrors char board[2][8][8]);
 
 // Checks that the pawn can move
 int checkPawnMove(int fromRow, int fromCol, int toRow, int toCol, int printErrors char board[2][8][8]);
@@ -305,15 +305,15 @@ int main(int argc, char *argv[])
 
 
 
-int RookRules(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess[2][8][8]){
+int RookRules(char ent1, int fromRow, int fromCol, int toRow, int toCol, int printErrors, char chess[2][8][8]) {
   int q = 0;
-  switch(chess[0][i1][j1]){ 
+  switch(chess[0][fromRow][fromCol]){ 
     case '5':/***CHECKS WHETHER ROOK IS THERE OR NOT******/
             {
-                  if(l1==j1)
+                  if(toCol==fromCol)
                   {/*******FOR VERTICAL MOVEMENT*************/
                             int rip;
-                            rip = k1 - i1;
+                            rip = toRow - fromRow;
                             int vap = rip-1;           
 
                             if(rip <0)
@@ -325,7 +325,7 @@ int RookRules(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess
                             { 
                                   if(rip>0)
                                   {   
-                                      if(chess[1][i1 + vap][j1] == ' ')
+                                      if(chess[1][fromRow + vap][fromCol] == ' ')
                                       continue;
 
                                       else
@@ -339,7 +339,7 @@ int RookRules(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess
 
                                   else if(rip<0)
                                   {
-                                      if(chess[1][i1 - vap][j1] == ' ')
+                                      if(chess[1][fromRow - vap][fromCol] == ' ')
                                       continue;
             
                                       else
@@ -353,7 +353,7 @@ int RookRules(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess
 
                             }
 
-                            if(chess[1][i1][j1] == chess[1][k1][l1] )
+                            if(chess[1][fromRow][fromCol] == chess[1][toRow][toCol] )
                             {
                                 q =1;
                                 vap = 1;
@@ -364,18 +364,18 @@ int RookRules(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess
 
                             if(vap ==0)
                             {
-                                  chess[0][k1][l1]=chess[0][i1][j1];
-                                  chess[1][k1][l1]=chess[1][i1][j1];
-                                  chess[0][i1][j1]=chess[1][i1][j1]=' ';
+                                  chess[0][toRow][toCol]=chess[0][fromRow][fromCol];
+                                  chess[1][toRow][toCol]=chess[1][fromRow][fromCol];
+                                  chess[0][fromRow][fromCol]=chess[1][fromRow][fromCol]=' ';
 
                             }
 
                   }
 
-                  else if(k1==i1)
+                  else if(toRow==fromRow)
                   {/******FOR HORIZONTAL MOVEMENT*************/
                             int rhip;
-                            rhip = l1 - j1;
+                            rhip = toCol - fromCol;
                             int vhap = rhip -1 ;
 
                             if(rhip <0)
@@ -387,7 +387,7 @@ int RookRules(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess
                             {
                                   if(rhip>0)
                                   {
-                                      if(chess[1][i1][j1 + vhap] == ' ')
+                                      if(chess[1][fromRow][fromCol + vhap] == ' ')
                                       continue;
 
                                       else
@@ -401,7 +401,7 @@ int RookRules(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess
 
                                   else if(rhip<0)
                                   {
-                                      if(chess[1][i1][j1 - vhap] == ' ')
+                                      if(chess[1][fromRow][fromCol - vhap] == ' ')
                                       continue;
 
                                       else
@@ -416,7 +416,7 @@ int RookRules(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess
 
                             }
 
-                            if(chess[1][i1][j1] == chess[1][k1][l1] )
+                            if(chess[1][fromRow][fromCol] == chess[1][toRow][toCol] )
                             {   
                                 q =1;
                                 vhap = 1;
@@ -427,9 +427,9 @@ int RookRules(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess
 
                             if(vhap ==0)
                             {
-                                  chess[0][k1][l1]=chess[0][i1][j1];
-                                  chess[1][k1][l1]=chess[1][i1][j1];
-                                  chess[0][i1][j1]=chess[1][i1][j1]=' ';
+                                  chess[0][toRow][toCol]=chess[0][fromRow][fromCol];
+                                  chess[1][toRow][toCol]=chess[1][fromRow][fromCol];
+                                  chess[0][fromRow][fromCol]=chess[1][fromRow][fromCol]=' ';
 
                             }
 
@@ -458,14 +458,14 @@ int RookRules(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess
   return q;
 }
 
-int KnightRules(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess[2][8][8]){
+int KnightRules(char ent1, int fromRow, int fromCol, int toRow, int toCol, int printErrors, char chess[2][8][8]){
   int q = 0;
-  switch(chess[0][i1][j1])    
+  switch(chess[0][fromRow][fromCol])    
     { case '2':/***CHECKS WHETHER KNIGHT IS THERE OR NOT******/
           {     
-                if( (k1 == i1+2 || k1 == i1-2) && (k1>=0 && k1<=7) && (l1 == j1+1 || l1 == j1-1) && (l1>=0 && l1<=7) )
+                if( (toRow == fromRow+2 || toRow == fromRow-2) && (toRow>=0 && toRow<=7) && (toCol == fromCol+1 || toCol == fromCol-1) && (toCol>=0 && toCol<=7) )
                 {/*******FOR VERTICAL MOVEMENT*************/
-                          if(chess[1][i1][j1] == chess[1][k1][l1] )
+                          if(chess[1][fromRow][fromCol] == chess[1][toRow][toCol] )
                           {
                               q =1;
                               if(printErrors == 0)
@@ -475,18 +475,18 @@ int KnightRules(char ent1,int i1,int j1,int k1,int l1, int printErrors, char che
 
                           else
                           {
-                                chess[0][k1][l1]=chess[0][i1][j1];
-                                chess[1][k1][l1]=chess[1][i1][j1];
-                                chess[0][i1][j1]=chess[1][i1][j1]=' ';
+                                chess[0][toRow][toCol]=chess[0][fromRow][fromCol];
+                                chess[1][toRow][toCol]=chess[1][fromRow][fromCol];
+                                chess[0][fromRow][fromCol]=chess[1][fromRow][fromCol]=' ';
 
                           }
                     
                 }
             
           
-              else if( (k1 == i1+1 || k1 == i1-1) && (k1>=0 && k1<=7) && (l1 == j1+2 || l1== j1-2) && (l1>=0 && l1<=7) )
+              else if( (toRow == fromRow+1 || toRow == fromRow-1) && (toRow>=0 && toRow<=7) && (toCol == fromCol+2 || toCol== fromCol-2) && (toCol>=0 && toCol<=7) )
                 {/*********FOR HORIZONTAL MOVEMENT***********/
-                          if(chess[1][i1][j1] == chess[1][k1][l1] )
+                          if(chess[1][fromRow][fromCol] == chess[1][toRow][toCol] )
                           {
                               q =1;
                               if(printErrors == 0)
@@ -496,9 +496,9 @@ int KnightRules(char ent1,int i1,int j1,int k1,int l1, int printErrors, char che
 
                           else
                           {
-                                chess[0][k1][l1]=chess[0][i1][j1];
-                                chess[1][k1][l1]=chess[1][i1][j1];
-                                chess[0][i1][j1]=chess[1][i1][j1]=' ';
+                                chess[0][toRow][toCol]=chess[0][fromRow][fromCol];
+                                chess[1][toRow][toCol]=chess[1][fromRow][fromCol];
+                                chess[0][fromRow][fromCol]=chess[1][fromRow][fromCol]=' ';
 
                           }
 
@@ -534,16 +534,16 @@ int KnightRules(char ent1,int i1,int j1,int k1,int l1, int printErrors, char che
   printErrors means condition for stopping printf statements
   when printErrors ==1 do not print
 */
-int compute(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess[2][8][8]) {
+int compute(char ent1, int fromRow, int fromCol, int toRow, int toCol, int printErrors char board[2][8][8]) {
   int q=0;
 
   switch(ent1) {
     case '1': // Piece is a Pawn
-      q = checkPawnMove(ent1, i1, j1, k1, l1, printErrors, chess);
+      q = checkPawnMove(ent1, fromRow, fromCol, toRow, toCol, printErrors, chess);
       break;
 
     case '2': // Piece is a Knight
-      q = KnightRules(ent1, i1,j1,k1,l1, printErrors, chess);
+      q = KnightRules(ent1, fromRow, fromCol, toRow, toCol, printErrors, chess);
       break;
 
     case'3':/***************************************RULE OF NO-ENTITY 3 ****************************************/
@@ -557,13 +557,13 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess[2
 
 
        case'4':/****************************************RULES OF BISHOP****************************************/
-              switch(chess[0][i1][j1])
+              switch(chess[0][fromRow][fromCol])
                      { case '4': /***CHECKS WHETHER BISHOP IS THERE OR NOT******/
                               {    int bis;
-                                   bis = k1 - i1;                                     
+                                   bis = toRow - fromRow;                                     
                                 /*   printf("%d\n",bis);*/
 
-                                   if(l1 == bis + j1 || l1 == (-1)*bis + j1)
+                                   if(toCol == bis + fromCol || toCol == (-1)*bis + fromCol)
                                    {      int var = bis - 1;
                                            
 
@@ -573,9 +573,9 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess[2
                                      
                                           for(var; var >0; var--)
                                           {    
-                                               if(bis > 0 && l1 > j1)
+                                               if(bis > 0 && toCol > fromCol)
                                                { 
-                                                   if(chess[1][i1+var][j1+var] == ' ')
+                                                   if(chess[1][fromRow+var][fromCol+var] == ' ')
                                                    continue;     
 
                                                    else
@@ -587,9 +587,9 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess[2
                                                    }
                                                }
 
-                                               else if(bis > 0 && l1 < j1)
+                                               else if(bis > 0 && toCol < fromCol)
                                                {
-                                                   if(chess[1][i1+var][j1-var] == ' ')
+                                                   if(chess[1][fromRow+var][fromCol-var] == ' ')
                                                    continue;
 
                                                    else
@@ -601,9 +601,9 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess[2
                                                    }
                                                }
 
-                                               else if(bis < 0 && l1 > j1)
+                                               else if(bis < 0 && toCol > fromCol)
                                                {
-                                                   if(chess[1][i1-var][j1+var] == ' ')
+                                                   if(chess[1][fromRow-var][fromCol+var] == ' ')
                                                    continue;
 
                                                    else
@@ -616,9 +616,9 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess[2
                                                    }
                                                }
 
-                                               if(bis < 0 && l1 < j1)
+                                               if(bis < 0 && toCol < fromCol)
                                                {
-                                                   if(chess[1][i1-var][j1-var] == ' ')
+                                                   if(chess[1][fromRow-var][fromCol-var] == ' ')
                                                    continue;
 
                                                    else
@@ -634,7 +634,7 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess[2
                                           }
 
 
-                                          if(chess[1][i1][j1] == chess[1][k1][l1])
+                                          if(chess[1][fromRow][fromCol] == chess[1][toRow][toCol])
                                           {
                                               q =1;
                                               var = 1;
@@ -645,9 +645,9 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess[2
 
                                           if(var == 0)
                                           {
-                                              chess[0][k1][l1]=chess[0][i1][j1];
-                                              chess[1][k1][l1]=chess[1][i1][j1];
-                                              chess[0][i1][j1]=chess[1][i1][j1]=' ';
+                                              chess[0][toRow][toCol]=chess[0][fromRow][fromCol];
+                                              chess[1][toRow][toCol]=chess[1][fromRow][fromCol];
+                                              chess[0][fromRow][fromCol]=chess[1][fromRow][fromCol]=' ';
 
                                           }
 
@@ -679,7 +679,7 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess[2
 
        case '5' : /******************************************RULES FOR ROOK*********************************/
                 {
-                q = RookRules(ent1, i1,j1,k1,l1, printErrors, chess);
+                q = RookRules(ent1, fromRow,fromCol,toRow,toCol, printErrors, chess);
         }break;
 
 
@@ -698,14 +698,14 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess[2
 
 
        case'7':/***************************************RULE OF QUEEN ****************************************/
-             switch(chess[0][i1][j1])/***CHECKS WHETHER QUEEN IS THERE OR NOT******/
+             switch(chess[0][fromRow][fromCol])/***CHECKS WHETHER QUEEN IS THERE OR NOT******/
                  { case'7':
                            {
                          
-                            if(l1==j1)
+                            if(toCol==fromCol)
                              {/*******FOR VERTICAL MOVEMENT*************/
                                         int rip;
-                                        rip = k1 - i1;
+                                        rip = toRow - fromRow;
                                         int vap = rip-1;
 
                                         if(rip <0)
@@ -717,7 +717,7 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess[2
                                         {
                                              if(rip>0)
                                              {
-                                                  if(chess[1][i1 + vap][j1] == ' ')
+                                                  if(chess[1][fromRow + vap][fromCol] == ' ')
                                                   continue;
 
                                                   else
@@ -731,7 +731,7 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess[2
 
                                              else if(rip<0)
                                              {
-                                                  if(chess[1][i1 - vap][j1] == ' ')
+                                                  if(chess[1][fromRow - vap][fromCol] == ' ')
                                                   continue;
 
                                                   else
@@ -745,7 +745,7 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess[2
 
                                         }
 
-                                        if(chess[1][i1][j1] == chess[1][k1][l1] )
+                                        if(chess[1][fromRow][fromCol] == chess[1][toRow][toCol] )
                                         {
                                             q =1;
                                             vap = 1;
@@ -756,18 +756,18 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess[2
 
                                         if(vap ==0)
                                         {
-                                             chess[0][k1][l1]=chess[0][i1][j1];
-                                             chess[1][k1][l1]=chess[1][i1][j1];
-                                             chess[0][i1][j1]=chess[1][i1][j1]=' ';
+                                             chess[0][toRow][toCol]=chess[0][fromRow][fromCol];
+                                             chess[1][toRow][toCol]=chess[1][fromRow][fromCol];
+                                             chess[0][fromRow][fromCol]=chess[1][fromRow][fromCol]=' ';
 
                                         }
 
                              }
 
-                             else if(k1==i1)
+                             else if(toRow==fromRow)
                              {/******FOR HORIZONTAL MOVEMENT*************/
                                         int rhip;
-                                        rhip = l1 - j1;
+                                        rhip = toCol - fromCol;
                                         int vhap = rhip -1 ;
 
                                         if(rhip <0)
@@ -779,7 +779,7 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess[2
                                         {
                                              if(rhip>0)
                                              {
-                                                  if(chess[1][i1][j1 + vhap] == ' ')
+                                                  if(chess[1][fromRow][fromCol + vhap] == ' ')
                                                   continue;
 
                                                   else
@@ -793,7 +793,7 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess[2
 
                                              else if(rhip<0)
                                              {
-                                                  if(chess[1][i1][j1 - vhap] == ' ')
+                                                  if(chess[1][fromRow][fromCol - vhap] == ' ')
                                                   continue;
 
                                                   else
@@ -808,7 +808,7 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess[2
 
                                         }
 
-                                        if(chess[1][i1][j1] == chess[1][k1][l1] )
+                                        if(chess[1][fromRow][fromCol] == chess[1][toRow][toCol] )
                                         {
                                             q =1;
                                             vhap = 1;
@@ -819,9 +819,9 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess[2
 
                                         if(vhap ==0)
                                         {
-                                             chess[0][k1][l1]=chess[0][i1][j1];
-                                             chess[1][k1][l1]=chess[1][i1][j1];
-                                             chess[0][i1][j1]=chess[1][i1][j1]=' ';
+                                             chess[0][toRow][toCol]=chess[0][fromRow][fromCol];
+                                             chess[1][toRow][toCol]=chess[1][fromRow][fromCol];
+                                             chess[0][fromRow][fromCol]=chess[1][fromRow][fromCol]=' ';
 
                                         }
 
@@ -830,10 +830,10 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess[2
  
                               else
                               {    int bis;
-                                   bis = k1 - i1;
+                                   bis = toRow - fromRow;
                                    /*printf("%d\n",bis);*/
 
-                                   if(l1 == bis + j1 || l1 == (-1)*bis + j1)
+                                   if(toCol == bis + fromCol || toCol == (-1)*bis + fromCol)
                                    {      int var = bis - 1;
 
 
@@ -843,9 +843,9 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess[2
 
                                           for(var; var >0; var--)
                                           {
-                                               if(bis > 0 && l1 > j1)
+                                               if(bis > 0 && toCol > fromCol)
                                                {
-                                                   if(chess[1][i1+var][j1+var] == ' ')
+                                                   if(chess[1][fromRow+var][fromCol+var] == ' ')
                                                    continue;
 
                                                    else
@@ -857,9 +857,9 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess[2
                                                    }
                                                }
 
-                                               else if(bis > 0 && l1 < j1)
+                                               else if(bis > 0 && toCol < fromCol)
                                                {
-                                                   if(chess[1][i1+var][j1-var] == ' ')
+                                                   if(chess[1][fromRow+var][fromCol-var] == ' ')
                                                    continue;
 
                                                    else
@@ -871,9 +871,9 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess[2
                                                    }
                                                }
 
-                                               else if(bis < 0 && l1 > j1)
+                                               else if(bis < 0 && toCol > fromCol)
                                                {   
-                                                   if(chess[1][i1-var][j1+var] == ' ')
+                                                   if(chess[1][fromRow-var][fromCol+var] == ' ')
                                                    continue;
 
                                                    else
@@ -886,9 +886,9 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess[2
                                                    }
                                                }
 
-                                               if(bis < 0 && l1 < j1)
+                                               if(bis < 0 && toCol < fromCol)
                                                {   
-                                                   if(chess[1][i1-var][j1-var] == ' ')
+                                                   if(chess[1][fromRow-var][fromCol-var] == ' ')
                                                    continue;
 
                                                    else
@@ -904,7 +904,7 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess[2
                                           }
 
 
-                                          if(chess[1][i1][j1] == chess[1][k1][l1])
+                                          if(chess[1][fromRow][fromCol] == chess[1][toRow][toCol])
                                           {
                                               q =1;
                                               var = 1;
@@ -915,9 +915,9 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess[2
 
                                           if(var == 0)
                                           {
-                                              chess[0][k1][l1]=chess[0][i1][j1];
-                                              chess[1][k1][l1]=chess[1][i1][j1];
-                                              chess[0][i1][j1]=chess[1][i1][j1]=' ';
+                                              chess[0][toRow][toCol]=chess[0][fromRow][fromCol];
+                                              chess[1][toRow][toCol]=chess[1][fromRow][fromCol];
+                                              chess[0][fromRow][fromCol]=chess[1][fromRow][fromCol]=' ';
 
                                           }
 
@@ -950,14 +950,14 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess[2
 
 
        case'9':/***************************************RULE OF KING ****************************************/
-             switch(chess[0][i1][j1])/***CHECKS WHETHER QUEEN IS THERE OR NOT******/
+             switch(chess[0][fromRow][fromCol])/***CHECKS WHETHER QUEEN IS THERE OR NOT******/
              {case'9':
                      {
                        
-                        if( (k1 == i1 + 1 || k1 == i1-1) && (l1 == j1 || l1==j1-1 || l1 == j1+1) )
+                        if( (toRow == fromRow + 1 || toRow == fromRow-1) && (toCol == fromCol || toCol==fromCol-1 || toCol == fromCol+1) )
                         {
 
-                              if(chess[1][i1][j1] == chess[1][k1][l1])
+                              if(chess[1][fromRow][fromCol] == chess[1][toRow][toCol])
                               {  
                                   q =1; 
                                   if(printErrors == 0)
@@ -967,19 +967,19 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess[2
 
                               else
                               {
-                                  chess[0][k1][l1]=chess[0][i1][j1];
-                                  chess[1][k1][l1]=chess[1][i1][j1];
-                                  chess[0][i1][j1]=chess[1][i1][j1]=' ';
+                                  chess[0][toRow][toCol]=chess[0][fromRow][fromCol];
+                                  chess[1][toRow][toCol]=chess[1][fromRow][fromCol];
+                                  chess[0][fromRow][fromCol]=chess[1][fromRow][fromCol]=' ';
 
                                }
 
 
                         }  
 
-                        else if( (k1 == i1) && (l1==j1-1 || l1 == j1+1) )
+                        else if( (toRow == fromRow) && (toCol==fromCol-1 || toCol == fromCol+1) )
                         {
 
-                              if(chess[1][i1][j1] == chess[1][k1][l1])
+                              if(chess[1][fromRow][fromCol] == chess[1][toRow][toCol])
                               {
                                   q =1;
                                   if(printErrors == 0)
@@ -989,9 +989,9 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess[2
 
                               else                                  
                               {
-                                  chess[0][k1][l1]=chess[0][i1][j1];
-                                  chess[1][k1][l1]=chess[1][i1][j1];
-                                  chess[0][i1][j1]=chess[1][i1][j1]=' ';
+                                  chess[0][toRow][toCol]=chess[0][fromRow][fromCol];
+                                  chess[1][toRow][toCol]=chess[1][fromRow][fromCol];
+                                  chess[0][fromRow][fromCol]=chess[1][fromRow][fromCol]=' ';
 
                                }
 
