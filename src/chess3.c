@@ -6,17 +6,26 @@
 #include <stdlib.h>  
 #include <unistd.h>
 #include "AI.h"
+
 //Added by Grant for testing:
 #include "CuTest.h"
 
-/* 1 = PAWN
- * 2 = KNIGHT
- * 4 = BISHOP
- * 5 = ROOK
- * 7 = QUEEN
- * 9 = KING*/
+/* 
+  1 = PAWN
+  2 = KNIGHT
+  4 = BISHOP
+  5 = ROOK
+  7 = QUEEN
+  9 = KING
+*/
 
+// Computes if a move is valid and performs it
 int compute(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess[2][8][8]);
+
+// Checks that the pawn can move
+int checkPawnMove(int fromRow, int fromCol, int toRow, int toCol, int printErrors char board[2][8][8]);
+
+// Prints the game board & instructions
 void printing(char chp [2][8][8]);
 
 
@@ -519,212 +528,25 @@ int KnightRules(char ent1,int i1,int j1,int k1,int l1, int printErrors, char che
 
 
 
+/*
+  Computes results of attempting a move
 
-int compute(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess[2][8][8])
-/*printErrors means condition for stopping printf statements
- *when printErrors ==1 do not print  */
-{     
-     int q=0;
-     switch(ent1)
-      {
-       case '1':/************************************* RULES FOR PAWN************************************************/ 
-             switch(chess[0][i1][j1])
-             { 
-        	case'1': /*CHECKS WHETHER PAWN IS AVAILABLE OR NOT*/
-                {
-                  if (chess[1][i1][j1]=='1')/*FOR UPPER PLAYER*/
-                  {
-                       if( (chess[1][k1][l1]== '1' && l1==j1) || (i1 == 1 && chess[1][2][j1] == '1' && j1==l1 ) ) 
-                        {
-                         q=1;
-                         if(printErrors == 0)  
-                           printf("PLAYER 1 YOU CAN NOT OVERRUN YOUR ARMY\n");/************ERROR ERROR***************/
-                        }
+  printErrors means condition for stopping printf statements
+  when printErrors ==1 do not print
+*/
+int compute(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess[2][8][8]) {
+  int q=0;
 
-                       else if (chess[1][2][j1] == '2')
-                        {
-                         q=1;
-                         if(printErrors == 0)
-                           printf("PLAYER 1 PAWN CAN'T JUMP OVER THE ENEMY\n");/************ERROR ERROR***************/
-                        }
+  switch(ent1) {
+    case '1': // Piece is a Pawn
+      q = checkPawnMove(ent1, i1, j1, k1, l1, printErrors, chess);
+      break;
 
-                    
-                       else
-                       {
-                           if ( i1==1 && (k1==i1+1 || k1==i1+2) && l1==j1 )/*WHEN THE PAWN IS AT ITS INITIAL POSITION*/
-                           {                                               
-                                if(chess[1][k1][l1] == ' ')
-                                   {
-                                   chess[0][k1][l1]=chess[0][i1][j1];
-                                   chess[1][k1][l1]=chess[1][i1][j1];
-                                   chess[0][i1][j1]=chess[1][i1][j1]=' ';
-                                   }
+    case '2': // Piece is a Knight
+      q = KnightRules(ent1, i1,j1,k1,l1, printErrors, chess);
+      break;
 
-                                 else
-                                   {
-                                     q=1;
-                                     if(printErrors == 0)
-                                       printf("ILLEGAL MOVE\n");/************ERROR ERROR***************/
-
-                                   }
-
-                           }
-               
-                       
-		           else if (k1==i1+1 && l1==j1)/*WHEN PAWN IS ANYWHERE ELSE*/
-		 	   {
-                                if(chess[1][k1][l1] == ' ')
-                                   {
-                                   chess[0][k1][l1]=chess[0][i1][j1];
-                                   chess[1][k1][l1]=chess[1][i1][j1];
-                                   chess[0][i1][j1]=chess[1][i1][j1]=' ';
-                                   }
- 
-                                 else
-                                   {
-                                    q=1;
-                                    if(printErrors == 0)
-                                      printf("ILLEGAL MOVE\n");/************ERROR ERROR***************/
-                                   }
-
-                           }
-
-                           else if (k1 == i1+1 && ( l1==j1-1 || l1==j1+1))/*WHEN PAWN IS ANYWHERE ELSE*/
-                           { 
-                                if(chess[1][k1][l1] == '2')
-                                   {
-                                   chess[0][k1][l1]=chess[0][i1][j1];
-                                   chess[1][k1][l1]=chess[1][i1][j1];   
-                                   chess[0][i1][j1]=chess[1][i1][j1]=' ';
-                                   }
-               
-                                else
-                                   {
-                                     q=1;
-                                     if(printErrors == 0)
-                                       printf("ILLEGAL MOVE\n");/************ERROR ERROR***************/
-
-                                   }
-                           }
-
-
-                            else
-                            {    q=1;
-                                 if(printErrors == 0)
-                                   printf("PLAYER 1 ILLEGAL MOVE\n");/************ERROR ERROR***************/
-
-                            }
-
-      		       }
-
-                  }
-
-		  else if (chess[1][i1][j1]=='2')/*FOR LOWER PLAYER*/
-                  {
-                        if( (chess[1][k1][l1]== '2' && l1 == j1) || (i1==6 && chess[1][5][j1] == '2' && j1==l1 ) )
-                        {
-                         q=1;
-                         if(printErrors == 0)  
-                           printf("PLAYER 2 YOU CAN NOT OVERRUN YOUR ARMY\n");/************ERROR ERROR***************/
-                        }
- 
-                        else if (chess[1][5][j1] == '1')
-                        {
-                         q=1;
-                         if(printErrors == 0)
-                           printf("PLAYER 2 PAWN CAN'T JUMP OVER THE ENEMY\n");/************ERROR ERROR***************/
-                        }
-
-
-                       else
-                       {
-                           if ( i1==6 && (k1==i1-1 || k1==i1-2) && l1==j1 )/*WHEN THE PAWN IS AT ITS INITIAL POSITION*/
-                           {
-                                if(chess[1][k1][l1] == ' ')
-                                   {
-                                   chess[0][k1][l1]=chess[0][i1][j1];
-                                   chess[1][k1][l1]=chess[1][i1][j1];
-                                   chess[0][i1][j1]=chess[1][i1][j1]=' ';
-                                   }
-
-                                 else
-                                   {
-                                    q=1;
-                                    if(printErrors == 0)
-                                      printf("ILLEGAL MOVE\n");/************ERROR ERROR***************/
-
-                                   }
-
-                           }
-
-                           else if (k1==i1-1 && l1==j1)/*WHEN PAWN IS ANYWHERE ELSE*/
-                           {
-                                if(chess[1][k1][l1] == ' ')
-                                   {
-                                   chess[0][k1][l1]=chess[0][i1][j1];
-                                   chess[1][k1][l1]=chess[1][i1][j1];
-                                   chess[0][i1][j1]=chess[1][i1][j1]=' ';
-                                   }
-
-                                 else
-                                   {
-                                    q=1;
-                                    if(printErrors == 0)
-                                      printf("ILLEGAL MOVE\n");/************ERROR ERROR***************/
-                                   }
-
-                           }
-
-                           else if (k1 == i1-1 && ( l1==j1-1 || l1==j1+1))/*WHEN PAWN IS ANYWHERE ELSE*/
-                           {
-                                if(chess[1][k1][l1] == '1')
-                                   {
-                                   chess[0][k1][l1]=chess[0][i1][j1];
-                                   chess[1][k1][l1]=chess[1][i1][j1];
-                                   chess[0][i1][j1]=chess[1][i1][j1]=' ';
-                                   }
-
-                                else
-                                   {
-                                    q=1;
-                                    if(printErrors == 0)
-                                      printf("ILLEGAL MOVE\n");/************ERROR ERROR***************/
-                                   }
-                           }
-	
-                  
-		           else
-                           {        q=1;   
-                                    if(printErrors == 0)
-                                      printf("YOUR MOVE IS ILLEGAL\n");/************ERROR ERROR***************/
-                           }
-    
-		        }
-                  }
-
-                break;}/*BREAK OF CASE 1*/	
-
-	 
-
-                default:
-                       {  q=1;
-                          if(printErrors == 0)
-                            printf("PAWN IS NOT AT THE SPECIFIED POSITION\n");/************ERROR ERROR***************/
-                       }
-
-             }break;/**********************************************END OF PAWN***********************************/
- 
-
-
-       case '2' : /******************************************RULES FOR KNIGHT*********************************/
-        {
-            q = KnightRules(ent1, i1,j1,k1,l1, printErrors, chess);
-
-             }break;/***********************************END OF KNIGHT********************************************/
-        
-
- 
-       case'3':/***************************************RULE OF NO-ENTITY 3 ****************************************/
+    case'3':/***************************************RULE OF NO-ENTITY 3 ****************************************/
              {
                    q =1;
                    if(printErrors == 0)
@@ -1200,18 +1022,169 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int printErrors, char chess[2
              }break;/***********************************END OF KING **************************************/
 
 
-       default:{ 
-                if(printErrors == 0)
-                  printf("OTHER THAN THE ALLOWED NUMBERS , CHARACTERS NOT ALLOWED AS ENTITY\nLOOK INTO HELP\n");/************ERROR ERROR***************/
-               }
-
-     }/*****************END OF SWITCH(ENTITY)************************/
+    default:
+      if(printErrors == 0)
+        printf("THERE IS NO ENTITY %c\n", ent1);
+      break;
+  }/*****************END OF SWITCH(ENTITY)************************/
    
-    return q;    
+    return q;
 
 }/*END OF COMPUTE*/
 
 
+// Checks that the pawn can move and performs it
+int checkPawnMove(int fromRow, int fromCol, int toRow, int toCol, int printErrors, char board[2][8][8]) {
+  // Return 1 if an error occurred, 0 if successful
+  int error = 0;
+
+  // If the piece belongs to player 1 (top)
+  if (chess[1][fromRow][fromCol]=='1') {
+    // Check if the move would overrun a friendly piece
+    if ((chess[1][toRow][toCol]== '1' && toCol==fromCol) || (fromRow == 1 && chess[1][2][fromCol] == '1' && fromCol==toCol)) {
+      error = 1;
+      if(printErrors == 0)
+        printf("PLAYER 1 YOU CAN NOT OVERRUN YOUR ARMY\n"); /* ===== Error ===== */
+    }
+
+    // Check if the move would jump over an opponent piece
+    else if (chess[1][2][fromCol] == '2') {
+      error = 1;
+      if(printErrors == 0)
+        printf("PLAYER 1 PAWN CAN'T JUMP OVER THE ENEMY\n");  /* ===== Error ===== */
+    }
+
+    else {
+      // Check if the pawn is at its initial position (allow move forward 2)
+      if (fromRow == 1 && (toRow == fromRow + 1 || toRow == fromRow + 2) && toCol == fromCol) {
+        // Make the move if the space is empty
+        if (chess[1][toRow][toCol] == ' ') {
+          chess[0][toRow][toCol]=chess[0][fromRow][fromCol];
+          chess[1][toRow][toCol]=chess[1][fromRow][fromCol];
+          chess[0][fromRow][fromCol]=chess[1][fromRow][fromCol]=' ';
+        }
+        // Otherwise, give an error
+        else {
+          error = 1;
+          if (printErrors == 0)
+            printf("ILLEGAL MOVE\n");  /* ===== Error ===== */
+        }
+      }
+
+      // Otherwise use rules for non-starting space moves forward
+      else if (toRow==fromRow+1 && toCol==fromCol) {
+        // Make the move if the space is empty
+        if (chess[1][toRow][toCol] == ' ') {
+          chess[0][toRow][toCol]=chess[0][fromRow][fromCol];
+          chess[1][toRow][toCol]=chess[1][fromRow][fromCol];
+          chess[0][fromRow][fromCol]=chess[1][fromRow][fromCol]=' ';
+        }
+        // Otherwise give an error
+        else {
+          error = 1;
+          if (printErrors == 0)
+            printf("ILLEGAL MOVE\n"); /* ===== Error ===== */
+        }
+      }
+
+      // If the pawn is moving diagonally, only allow it to take pieces
+      else if (toRow == fromRow+1 && (toCol==fromCol-1 || toCol==fromCol+1)) {
+        // Make the move if the space has an opponent piece
+        if (chess[1][toRow][toCol] == '2') {
+            chess[0][toRow][toCol]=chess[0][fromRow][fromCol];
+            chess[1][toRow][toCol]=chess[1][fromRow][fromCol];   
+            chess[0][fromRow][fromCol]=chess[1][fromRow][fromCol]=' ';
+        }
+        // Otherwise give an error
+        else {
+          error = 1;
+          if(printErrors == 0)
+            printf("ILLEGAL MOVE\n"); /* ===== Error ===== */
+        }
+      }
+
+      // Any other moves are illegal
+      else
+      {    error = 1;
+            if(printErrors == 0)
+              printf("PLAYER 1 ILLEGAL MOVE\n");  /* ===== Error ===== */
+
+      }
+    }
+  }
+
+  // Else if piece belongs to player 2 (bottom)
+  else if (chess[1][fromRow][fromCol]=='2') {
+    // Check if the move overruns a friendly piece
+    if ((chess[1][toRow][toCol]== '2' && toCol == fromCol) || (fromRow==6 && chess[1][5][fromCol] == '2' && fromCol == toCol)) {
+      error = 1;
+      if (printErrors == 0)  
+        printf("PLAYER 2 YOU CAN NOT OVERRUN YOUR ARMY\n"); /* ===== Error ===== */
+    }
+    // Check if the move jumps over an opponent's piece
+    else if (chess[1][5][fromCol] == '1') {
+      error = 1;
+      if(printErrors == 0)
+        printf("PLAYER 2 PAWN CAN'T JUMP OVER THE ENEMY\n");  /* ===== Error ===== */
+    }
+    else {
+      // Check if the pawn is at its initial position (allow move 2 forward)
+      if (fromRow == 6 && (toRow == fromRow - 1 || toRow == fromRow - 2) && toCol == fromCol) {
+          // If the space is empty, perform the move
+          if(chess[1][toRow][toCol] == ' ') {
+            chess[0][toRow][toCol]=chess[0][fromRow][fromCol];
+            chess[1][toRow][toCol]=chess[1][fromRow][fromCol];
+            chess[0][fromRow][fromCol]=chess[1][fromRow][fromCol]=' ';
+          }
+          // Otherwise, give an error
+          else {
+            error = 1;
+            if(printErrors == 0)
+              printf("ILLEGAL MOVE\n"); /* ===== Error ===== */
+          }
+      }
+
+      // If it is anywhere else, do not allow moving 2 spaces forward
+      else if (toRow == fromRow - 1 && toCol == fromCol) {
+        // If the space is empty, perform the move
+        if (chess[1][toRow][toCol] == ' ') {
+          chess[0][toRow][toCol]=chess[0][fromRow][fromCol];
+          chess[1][toRow][toCol]=chess[1][fromRow][fromCol];
+          chess[0][fromRow][fromCol]=chess[1][fromRow][fromCol]=' ';
+        }
+        // Otherwise, give an error
+        else {
+          error = 1;
+          if(printErrors == 0)
+            printf("ILLEGAL MOVE\n"); /* ===== Error ===== */
+        }
+      }
+
+      // If moving diagonally, only allow pawn to take pieces
+      else if (toRow == fromRow - 1 && (toCol == fromCol - 1 || toCol == fromCol + 1)) {
+        // If the space has an opponent's piece, move into it and take it
+        if (chess[1][toRow][toCol] == '1') {
+          chess[0][toRow][toCol]=chess[0][fromRow][fromCol];
+          chess[1][toRow][toCol]=chess[1][fromRow][fromCol];
+          chess[0][fromRow][fromCol]=chess[1][fromRow][fromCol]=' ';
+        }
+        // Otherwise, give an error
+        else {
+          error = 1;
+          if(printErrors == 0)
+            printf("ILLEGAL MOVE\n"); /* ===== Error ===== */
+        }
+      }
+
+      // Any other moves are illegal
+      else {
+        error = 1;   
+        if(printErrors == 0)
+          printf("YOUR MOVE IS ILLEGAL\n");/************ERROR ERROR***************/
+      }
+    }
+  }
+}
 
 void printing(char chp [2][8][8])
 {     
