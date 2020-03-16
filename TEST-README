@@ -1,5 +1,10 @@
 By Grant Haines
 
+FOR GRADERS:
+To run the tests go into the "src" folder and run the command "testing --test"
+
+
+
 To add a new test, do the following:
 1) Write test in "UnitTests.c" (you can use the existing test as a template)
 	Use the following assert functions:

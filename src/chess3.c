@@ -6,17 +6,30 @@
 #include <stdlib.h>  
 #include <unistd.h>
 #include "AI.h"
+
 //Added by Grant for testing:
 #include "CuTest.h"
 
-/* 1 = PAWN
- * 2 = KNIGHT
- * 4 = BISHOP
- * 5 = ROOK
- * 7 = QUEEN
- * 9 = KING*/
+/* 
+  1 = PAWN
+  2 = KNIGHT
+  4 = BISHOP
+  5 = ROOK
+  7 = QUEEN
+  9 = KING
+*/
 
-int compute(char ent1,int i1,int j1,int k1,int l1, int cond, char chess[2][8][8]);
+// Computes if a move is valid and performs it
+int compute(char ent1, int fromRow, int fromCol, int toRow, int toCol, int printErrors, char board[2][8][8]);
+
+// Checks that the pawn can move
+int checkPawnMove(int fromRow, int fromCol, int toRow, int toCol, int printErrors, char board[2][8][8]);
+
+int checkBishopMove(char ent1, int fromRow, int fromCol, int toRow, int toCol, int printErrors, char chess[2][8][8]);
+
+int checkKingMove(char ent1, int fromRow, int fromCol, int toRow, int toCol, int printErrors, char chess[2][8][8]);
+
+// Prints the game board & instructions
 void printing(char chp [2][8][8]);
 
 
@@ -27,19 +40,20 @@ int main(int argc, char *argv[])
   if (argc == 2 && strcmp(argv[1], "--test") == 0) {
 	  RunAllTests();
   }
+
   else {
 
   //Original program
     char chess[2][8][8]={
                         {
-                        {'5','4','2','9','7','2','4','5'},
+                        {'5','2','4','7','9','4','2','1'},
                         {'1','1','1','1','1','1','1','1'},
                         {' ',' ',' ',' ',' ',' ',' ',' '},
                         {' ',' ',' ',' ',' ',' ',' ',' '},
                         {' ',' ',' ',' ',' ',' ',' ',' '},
                         {' ',' ',' ',' ',' ',' ',' ',' '},
                         {'1','1','1','1','1','1','1','1'},
-                        {'5','4','2','7','9','2','4','5'},
+                        {'5','2','4','7','9','4','2','5'},
                       },
 
                         {
@@ -78,12 +92,8 @@ int main(int argc, char *argv[])
 
 /***************************************TAKING THE INPUT**********************************************/
     if(checker%2 ==0)
-    { 
-       int loop =0;						/********Delay Loop********/
-       for(loop;loop<=1000000000;loop++)	/******To enhance the gameplay and make it look more real******/
-       {
-          ;
-       };
+    {
+      sleep(2); 
        AIfunc(chess);
        checker++;
      }
@@ -190,7 +200,8 @@ int main(int argc, char *argv[])
             char y;
     
             if( (y = getchar() ) == 'y' || (y = getchar() )== 'Y')
-            goto END;
+            
+            return 0;
        }
 
 
@@ -288,7 +299,6 @@ int main(int argc, char *argv[])
 
  }
   }
-   END:
   
    return 0;
 }
@@ -296,550 +306,266 @@ int main(int argc, char *argv[])
 
 
 
+int RookRules(char ent1, int fromRow, int fromCol, int toRow, int toCol, int printErrors, char chess[2][8][8]) {
+  int q = 0;
+  switch(chess[0][fromRow][fromCol]){ 
+    case '5':/***CHECKS WHETHER ROOK IS THERE OR NOT******/
+            {
+                  if(toCol==fromCol)
+                  {/*******FOR VERTICAL MOVEMENT*************/
+                            int rip;
+                            rip = toRow - fromRow;
+                            int vap = rip-1;           
 
+                            if(rip <0)
+                            {
+                                vap = (-1)*rip-1;
+                            }
 
-int compute(char ent1,int i1,int j1,int k1,int l1, int cond, char chess[2][8][8])
-/*cond means condition for stopping printf statements
- *when cond ==1 do not print  */
-{     
-     int q=0;
-     switch(ent1)
-      {
-       case '1':/************************************* RULES FOR PAWN************************************************/ 
-             switch(chess[0][i1][j1])
-             { 
-        	case'1': /*CHECKS WHETHER PAWN IS AVAILABLE OR NOT*/
-                {
-                  if (chess[1][i1][j1]=='1')/*FOR UPPER PLAYER*/
-                  {
-                       if( (chess[1][k1][l1]== '1' && l1==j1) || (i1 == 1 && chess[1][2][j1] == '1' && j1==l1 ) ) 
-                        {
-                         q=1;
-                         if(cond == 0)  
-                           printf("PLAYER 1 YOU CAN NOT OVERRUN YOUR ARMY\n");/************ERROR ERROR***************/
-                        }
+                            for(vap; vap>0; vap--)
+                            { 
+                                  if(rip>0)
+                                  {   
+                                      if(chess[1][fromRow + vap][fromCol] == ' ')
+                                      continue;
 
-                       else if (chess[1][2][j1] == '2')
-                        {
-                         q=1;
-                         if(cond == 0)
-                           printf("PLAYER 1 PAWN CAN'T JUMP OVER THE ENEMY\n");/************ERROR ERROR***************/
-                        }
+                                      else
+                                      {  
+                                          q =1; 
+                                          if(printErrors == 0)
+                                            printf("ROOK CAN'T JUMP\n");/*******ERROR ERROR*********/
+                                          break;
+                                      }
+                                  }
 
-                    
-                       else
-                       {
-                           if ( i1==1 && (k1==i1+1 || k1==i1+2) && l1==j1 )/*WHEN THE PAWN IS AT ITS INITIAL POSITION*/
-                           {                                               
-                                if(chess[1][k1][l1] == ' ')
-                                   {
-                                   chess[0][k1][l1]=chess[0][i1][j1];
-                                   chess[1][k1][l1]=chess[1][i1][j1];
-                                   chess[0][i1][j1]=chess[1][i1][j1]=' ';
-                                   }
-
-                                 else
-                                   {
-                                     q=1;
-                                     if(cond == 0)
-                                       printf("ILLEGAL MOVE\n");/************ERROR ERROR***************/
-
-                                   }
-
-                           }
-               
-                       
-		           else if (k1==i1+1 && l1==j1)/*WHEN PAWN IS ANYWHERE ELSE*/
-		 	   {
-                                if(chess[1][k1][l1] == ' ')
-                                   {
-                                   chess[0][k1][l1]=chess[0][i1][j1];
-                                   chess[1][k1][l1]=chess[1][i1][j1];
-                                   chess[0][i1][j1]=chess[1][i1][j1]=' ';
-                                   }
- 
-                                 else
-                                   {
-                                    q=1;
-                                    if(cond == 0)
-                                      printf("ILLEGAL MOVE\n");/************ERROR ERROR***************/
-                                   }
-
-                           }
-
-                           else if (k1 == i1+1 && ( l1==j1-1 || l1==j1+1))/*WHEN PAWN IS ANYWHERE ELSE*/
-                           { 
-                                if(chess[1][k1][l1] == '2')
-                                   {
-                                   chess[0][k1][l1]=chess[0][i1][j1];
-                                   chess[1][k1][l1]=chess[1][i1][j1];   
-                                   chess[0][i1][j1]=chess[1][i1][j1]=' ';
-                                   }
-               
-                                else
-                                   {
-                                     q=1;
-                                     if(cond == 0)
-                                       printf("ILLEGAL MOVE\n");/************ERROR ERROR***************/
-
-                                   }
-                           }
-
-
-                            else
-                            {    q=1;
-                                 if(cond == 0)
-                                   printf("PLAYER 1 ILLEGAL MOVE\n");/************ERROR ERROR***************/
+                                  else if(rip<0)
+                                  {
+                                      if(chess[1][fromRow - vap][fromCol] == ' ')
+                                      continue;
+            
+                                      else
+                                      {
+                                          q =1;
+                                          if(printErrors == 0)
+                                            printf("ROOK CAN'T JUMP\n");/*******ERROR ERROR*********/
+                                          break;
+                                      }
+                                  }
 
                             }
 
-      		       }
+                            if(chess[1][fromRow][fromCol] == chess[1][toRow][toCol] )
+                            {
+                                q =1;
+                                vap = 1;
+                                if(printErrors == 0)
+                                  printf("YOU CANNOT OVERRUN YOUR ARMY\n");/************ERROR ERROR***************/
+                            }
+
+
+                            if(vap ==0)
+                            {
+                                  chess[0][toRow][toCol]=chess[0][fromRow][fromCol];
+                                  chess[1][toRow][toCol]=chess[1][fromRow][fromCol];
+                                  chess[0][fromRow][fromCol]=chess[1][fromRow][fromCol]=' ';
+
+                            }
 
                   }
 
-		  else if (chess[1][i1][j1]=='2')/*FOR LOWER PLAYER*/
+                  else if(toRow==fromRow)
+                  {/******FOR HORIZONTAL MOVEMENT*************/
+                            int rhip;
+                            rhip = toCol - fromCol;
+                            int vhap = rhip -1 ;
+
+                            if(rhip <0)
+                            {  
+                                vhap = (-1)*rhip-1;
+                            }
+
+                            for(vhap; vhap>0; vhap--)
+                            {
+                                  if(rhip>0)
+                                  {
+                                      if(chess[1][fromRow][fromCol + vhap] == ' ')
+                                      continue;
+
+                                      else
+                                      {   
+                                          q =1;
+                                          if(printErrors == 0)
+                                            printf("ROOK CAN'T JUMP\n");/*******ERROR ERROR*********/
+                                          break;
+                                      }
+                                  }
+
+                                  else if(rhip<0)
+                                  {
+                                      if(chess[1][fromRow][fromCol - vhap] == ' ')
+                                      continue;
+
+                                      else
+                                      {
+                                          q =1;
+                                          if(printErrors == 0)
+                                            printf("ROOK CAN'T JUMP\n");/*******ERROR ERROR*********/
+                                          break;
+                                      }
+                                  }
+
+
+                            }
+
+                            if(chess[1][fromRow][fromCol] == chess[1][toRow][toCol] )
+                            {   
+                                q =1;
+                                vhap = 1;
+                                if(printErrors == 0)
+                                  printf("YOU CANNOT OVERRUN YOUR ARMY\n"); /************ERROR ERROR***************/
+                            }
+
+
+                            if(vhap ==0)
+                            {
+                                  chess[0][toRow][toCol]=chess[0][fromRow][fromCol];
+                                  chess[1][toRow][toCol]=chess[1][fromRow][fromCol];
+                                  chess[0][fromRow][fromCol]=chess[1][fromRow][fromCol]=' ';
+
+                            }
+
+                  }
+            
+                else
                   {
-                        if( (chess[1][k1][l1]== '2' && l1 == j1) || (i1==6 && chess[1][5][j1] == '2' && j1==l1 ) )
-                        {
-                         q=1;
-                         if(cond == 0)  
-                           printf("PLAYER 2 YOU CAN NOT OVERRUN YOUR ARMY\n");/************ERROR ERROR***************/
-                        }
- 
-                        else if (chess[1][5][j1] == '1')
-                        {
-                         q=1;
-                         if(cond == 0)
-                           printf("PLAYER 2 PAWN CAN'T JUMP OVER THE ENEMY\n");/************ERROR ERROR***************/
-                        }
-
-
-                       else
-                       {
-                           if ( i1==6 && (k1==i1-1 || k1==i1-2) && l1==j1 )/*WHEN THE PAWN IS AT ITS INITIAL POSITION*/
-                           {
-                                if(chess[1][k1][l1] == ' ')
-                                   {
-                                   chess[0][k1][l1]=chess[0][i1][j1];
-                                   chess[1][k1][l1]=chess[1][i1][j1];
-                                   chess[0][i1][j1]=chess[1][i1][j1]=' ';
-                                   }
-
-                                 else
-                                   {
-                                    q=1;
-                                    if(cond == 0)
-                                      printf("ILLEGAL MOVE\n");/************ERROR ERROR***************/
-
-                                   }
-
-                           }
-
-                           else if (k1==i1-1 && l1==j1)/*WHEN PAWN IS ANYWHERE ELSE*/
-                           {
-                                if(chess[1][k1][l1] == ' ')
-                                   {
-                                   chess[0][k1][l1]=chess[0][i1][j1];
-                                   chess[1][k1][l1]=chess[1][i1][j1];
-                                   chess[0][i1][j1]=chess[1][i1][j1]=' ';
-                                   }
-
-                                 else
-                                   {
-                                    q=1;
-                                    if(cond == 0)
-                                      printf("ILLEGAL MOVE\n");/************ERROR ERROR***************/
-                                   }
-
-                           }
-
-                           else if (k1 == i1-1 && ( l1==j1-1 || l1==j1+1))/*WHEN PAWN IS ANYWHERE ELSE*/
-                           {
-                                if(chess[1][k1][l1] == '1')
-                                   {
-                                   chess[0][k1][l1]=chess[0][i1][j1];
-                                   chess[1][k1][l1]=chess[1][i1][j1];
-                                   chess[0][i1][j1]=chess[1][i1][j1]=' ';
-                                   }
-
-                                else
-                                   {
-                                    q=1;
-                                    if(cond == 0)
-                                      printf("ILLEGAL MOVE\n");/************ERROR ERROR***************/
-                                   }
-                           }
-	
-                  
-		           else
-                           {        q=1;   
-                                    if(cond == 0)
-                                      printf("YOUR MOVE IS ILLEGAL\n");/************ERROR ERROR***************/
-                           }
-    
-		        }
+                      q =1;
+                      if(printErrors == 0)
+                        printf("INVALID MOVE FOR ROOK\n"); /*******ERROR ERROR*********/
+                    
                   }
 
-                break;}/*BREAK OF CASE 1*/	
 
-	 
-
-                default:
-                       {  q=1;
-                          if(cond == 0)
-                            printf("PAWN IS NOT AT THE SPECIFIED POSITION\n");/************ERROR ERROR***************/
-                       }
-
-             }break;/**********************************************END OF PAWN***********************************/
- 
+        break;}/***END OF CASE 5 ***********/
 
 
-       case '2' : /******************************************RULES FOR KNIGHT*********************************/
-             switch(chess[0][i1][j1])    
-             { case '2':/***CHECKS WHETHER KNIGHT IS THERE OR NOT******/
-                       {     
-                             if( (k1 == i1+2 || k1 == i1-2) && (k1>=0 && k1<=7) && (l1 == j1+1 || l1 == j1-1) && (l1>=0 && l1<=7) )
-                             {/*******FOR VERTICAL MOVEMENT*************/
-                                        if(chess[1][i1][j1] == chess[1][k1][l1] )
-                                        {
-                                            q =1;
-                                            if(cond == 0)
-                                              printf("YOU CANNOT OVERRUN YOUR ARMY\n"); /************ERROR ERROR***************/
-                                        }
-                                    
+    default:
+          { 
+            q =1;
+            if(printErrors == 0)
+              printf("ROOK IS NOT AT THE SPECIFIED POSITION\n");/***********ERROR ERROR**************/
+          }
 
-                                        else
-                                        {
-                                             chess[0][k1][l1]=chess[0][i1][j1];
-                                             chess[1][k1][l1]=chess[1][i1][j1];
-                                             chess[0][i1][j1]=chess[1][i1][j1]=' ';
+  }/*******************************END OF ROOK**************************************/
+  return q;
+}
 
-                                        }
-                                 
-                             }
-                          
-                       
-                            else if( (k1 == i1+1 || k1 == i1-1) && (k1>=0 && k1<=7) && (l1 == j1+2 || l1== j1-2) && (l1>=0 && l1<=7) )
-                             {/*********FOR HORIZONTAL MOVEMENT***********/
-                                        if(chess[1][i1][j1] == chess[1][k1][l1] )
-                                        {
-                                            q =1;
-                                            if(cond == 0)
-                                              printf("YOU CANNOT OVERRUN YOUR ARMY\n");/************ERROR ERROR***************/
-                                        }
+int KnightRules(char ent1, int fromRow, int fromCol, int toRow, int toCol, int printErrors, char chess[2][8][8]){
+  int q = 0;
+  switch(chess[0][fromRow][fromCol])    
+    { case '2':/***CHECKS WHETHER KNIGHT IS THERE OR NOT******/
+          {     
+                if( (toRow == fromRow+2 || toRow == fromRow-2) && (toRow>=0 && toRow<=7) && (toCol == fromCol+1 || toCol == fromCol-1) && (toCol>=0 && toCol<=7) )
+                {/*******FOR VERTICAL MOVEMENT*************/
+                          if(chess[1][fromRow][fromCol] == chess[1][toRow][toCol] )
+                          {
+                              q =1;
+                              if(printErrors == 0)
+                                printf("YOU CANNOT OVERRUN YOUR ARMY\n"); /************ERROR ERROR***************/
+                          }
+                      
 
+                          else
+                          {
+                                chess[0][toRow][toCol]=chess[0][fromRow][fromCol];
+                                chess[1][toRow][toCol]=chess[1][fromRow][fromCol];
+                                chess[0][fromRow][fromCol]=chess[1][fromRow][fromCol]=' ';
 
-                                        else
-                                        {
-                                             chess[0][k1][l1]=chess[0][i1][j1];
-                                             chess[1][k1][l1]=chess[1][i1][j1];
-                                             chess[0][i1][j1]=chess[1][i1][j1]=' ';
-
-                                        }
-
-                             }
-
-                             else
-                             {
-                                        q =1;
-                                        if(cond == 0)
-                                          printf("YOUR KNIGHT MOVE IS ILLEGAL\n");/************ERROR ERROR***************/
-                             }
-                             
-               break;}/*BREAK OF CASE 2*/
+                          }
+                    
+                }
+            
+          
+              else if( (toRow == fromRow+1 || toRow == fromRow-1) && (toRow>=0 && toRow<=7) && (toCol == fromCol+2 || toCol== fromCol-2) && (toCol>=0 && toCol<=7) )
+                {/*********FOR HORIZONTAL MOVEMENT***********/
+                          if(chess[1][fromRow][fromCol] == chess[1][toRow][toCol] )
+                          {
+                              q =1;
+                              if(printErrors == 0)
+                                printf("YOU CANNOT OVERRUN YOUR ARMY\n");/************ERROR ERROR***************/
+                          }
 
 
-               default:
-                      {
-                        q =1;
-                        if(cond == 0)
-                          printf("KNIGHT IS NOT AT THE SPECIFIED POSITION\n");/************ERROR ERROR***************/
-                      }               
+                          else
+                          {
+                                chess[0][toRow][toCol]=chess[0][fromRow][fromCol];
+                                chess[1][toRow][toCol]=chess[1][fromRow][fromCol];
+                                chess[0][fromRow][fromCol]=chess[1][fromRow][fromCol]=' ';
 
-             }break;/***********************************END OF KNIGHT********************************************/
-        
+                          }
 
- 
-       case'3':/***************************************RULE OF NO-ENTITY 3 ****************************************/
+                }
+
+                else
+                {
+                          q =1;
+                          if(printErrors == 0)
+                            printf("YOUR KNIGHT MOVE IS ILLEGAL\n");/************ERROR ERROR***************/
+                }
+                
+  break;}/*BREAK OF CASE 2*/
+
+
+  default:
+        {
+          q =1;
+          if(printErrors == 0)
+            printf("KNIGHT IS NOT AT THE SPECIFIED POSITION\n");/************ERROR ERROR***************/
+        }
+  }       
+  return q;
+}
+
+
+
+
+
+/*
+  Computes results of attempting a move
+
+  printErrors means condition for stopping printf statements
+  when printErrors ==1 do not print
+*/
+int compute(char ent1, int fromRow, int fromCol, int toRow, int toCol, int printErrors, char board[2][8][8]) {
+  int q=0;
+
+  switch(ent1) {
+    case '1': // Piece is a Pawn
+      q = checkPawnMove(fromRow, fromCol, toRow, toCol, printErrors, board);
+      break;
+
+    case '2': // Piece is a Knight
+      q = KnightRules(ent1, fromRow, fromCol, toRow, toCol, printErrors, board);
+      break;
+
+    case'3':/***************************************RULE OF NO-ENTITY 3 ****************************************/
              {
                    q =1;
-                   if(cond == 0)
+                   if(printErrors == 0)
                      printf("THERE IS NO ENTITY 3\n");/************ERROR ERROR***************/
 
              }break;/***********************************END OF NO-ENTITY 3 ****************************************/
 
 
 
-       case'4':/****************************************RULES OF BISHOP****************************************/
-              switch(chess[0][i1][j1])
-                     { case '4': /***CHECKS WHETHER BISHOP IS THERE OR NOT******/
-                              {    int bis;
-                                   bis = k1 - i1;                                     
-                                /*   printf("%d\n",bis);*/
 
-                                   if(l1 == bis + j1 || l1 == (-1)*bis + j1)
-                                   {      int var = bis - 1;
-                                           
-
-                                          if(bis < 0){
-                                               var = (-1)*bis -1;
-                                           }
-                                     
-                                          for(var; var >0; var--)
-                                          {    
-                                               if(bis > 0 && l1 > j1)
-                                               { 
-                                                   if(chess[1][i1+var][j1+var] == ' ')
-                                                   continue;     
-
-                                                   else
-                                                   {
-                                                       q =1;
-                                                       if(cond == 0)
-                                                         printf("BISHOP CAN'T JUMP\n");/*******ERROR ERROR*********/
-                                                       break;
-                                                   }
-                                               }
-
-                                               else if(bis > 0 && l1 < j1)
-                                               {
-                                                   if(chess[1][i1+var][j1-var] == ' ')
-                                                   continue;
-
-                                                   else
-                                                   {
-                                                       q =1;
-                                                       if(cond == 0)
-                                                         printf("BISHOP CAN'T JUMP\n");/*******ERROR ERROR*********/
-                                                       break;
-                                                   }
-                                               }
-
-                                               else if(bis < 0 && l1 > j1)
-                                               {
-                                                   if(chess[1][i1-var][j1+var] == ' ')
-                                                   continue;
-
-                                                   else
-                                                   {
-                                                       q =1;
-                                                       if(cond == 0)
-                                                         printf("BISHOP CAN'T JUMP\n");/*******ERROR ERROR*********/
-                                                       break;
-
-                                                   }
-                                               }
-
-                                               if(bis < 0 && l1 < j1)
-                                               {
-                                                   if(chess[1][i1-var][j1-var] == ' ')
-                                                   continue;
-
-                                                   else
-                                                   {
-                                                       q =1;
-                                                       if(cond == 0)
-                                                         printf("BISHOP CAN'T JUMP\n");/*******ERROR ERROR*********/
-                                                       break;
-
-                                                   }
-                                               }
-
-                                          }
-
-
-                                          if(chess[1][i1][j1] == chess[1][k1][l1])
-                                          {
-                                              q =1;
-                                              var = 1;
-                                              if(cond == 0)
-                                                printf("YOU CANNOT OVERRUN YOUR ARMY\n"); /************ERROR ERROR***************/
-                                          }
-
-
-                                          if(var == 0)
-                                          {
-                                              chess[0][k1][l1]=chess[0][i1][j1];
-                                              chess[1][k1][l1]=chess[1][i1][j1];
-                                              chess[0][i1][j1]=chess[1][i1][j1]=' ';
-
-                                          }
-
-                                   }
-
-                                   else
-                                   {
-                                         q =1;
-                                         if(cond == 0)
-                                           printf("INVALID MOVE OF BISHOP\n"); /************ERROR ERROR***************/
-                                   }
-                              
-
-
-
-
-                 break;}/***END OF CASE 4 ***********/
-
-                 default:
-                        {   q =1;
-                            if(cond == 0)
-                              printf("BISHOP IS NOT AT THE SPECIFIED POSITION\n"); /************ERROR ERROR***************/
-                        }
-
-
-              }break; /*********************************END OF BISHOP**************************************/
-
-
+    case '4':/****************************************RULES OF BISHOP****************************************/
+	     q = checkBishopMove(ent1, fromRow, fromCol, toRow, toCol, printErrors, board);
+	     break;
 
        case '5' : /******************************************RULES FOR ROOK*********************************/
-             switch(chess[0][i1][j1])
-             { case '5':/***CHECKS WHETHER ROOK IS THERE OR NOT******/
-                       {
-                             if(l1==j1)
-                             {/*******FOR VERTICAL MOVEMENT*************/
-                                        int rip;
-                                        rip = k1 - i1;
-                                        int vap = rip-1;           
-
-                                        if(rip <0)
-                                        {
-                                           vap = (-1)*rip-1;
-                                        }
-
-                                        for(vap; vap>0; vap--)
-                                        { 
-                                             if(rip>0)
-                                             {   
-                                                  if(chess[1][i1 + vap][j1] == ' ')
-                                                  continue;
-
-                                                  else
-                                                  {  
-                                                      q =1; 
-                                                      if(cond == 0)
-                                                        printf("ROOK CAN'T JUMP\n");/*******ERROR ERROR*********/
-                                                      break;
-                                                  }
-                                             }
-
-                                             else if(rip<0)
-                                             {
-                                                  if(chess[1][i1 - vap][j1] == ' ')
-                                                  continue;
-                        
-                                                  else
-                                                  {
-                                                      q =1;
-                                                      if(cond == 0)
-                                                        printf("ROOK CAN'T JUMP\n");/*******ERROR ERROR*********/
-                                                      break;
-                                                  }
-                                             }
-
-                                        }
-
-                                        if(chess[1][i1][j1] == chess[1][k1][l1] )
-                                        {
-                                            q =1;
-                                            vap = 1;
-                                            if(cond == 0)
-                                              printf("YOU CANNOT OVERRUN YOUR ARMY\n");/************ERROR ERROR***************/
-                                        }
-
-
-                                        if(vap ==0)
-                                        {
-                                             chess[0][k1][l1]=chess[0][i1][j1];
-                                             chess[1][k1][l1]=chess[1][i1][j1];
-                                             chess[0][i1][j1]=chess[1][i1][j1]=' ';
-
-                                        }
-
-                             }
-
-                             else if(k1==i1)
-                             {/******FOR HORIZONTAL MOVEMENT*************/
-                                        int rhip;
-                                        rhip = l1 - j1;
-                                        int vhap = rhip -1 ;
-
-                                        if(rhip <0)
-                                        {  
-                                           vhap = (-1)*rhip-1;
-                                        }
-
-                                        for(vhap; vhap>0; vhap--)
-                                        {
-                                             if(rhip>0)
-                                             {
-                                                  if(chess[1][i1][j1 + vhap] == ' ')
-                                                  continue;
-
-                                                  else
-                                                  {   
-                                                      q =1;
-                                                      if(cond == 0)
-                                                        printf("ROOK CAN'T JUMP\n");/*******ERROR ERROR*********/
-                                                      break;
-                                                  }
-                                             }
-
-                                             else if(rhip<0)
-                                             {
-                                                  if(chess[1][i1][j1 - vhap] == ' ')
-                                                  continue;
-
-                                                  else
-                                                  {
-                                                      q =1;
-                                                      if(cond == 0)
-                                                        printf("ROOK CAN'T JUMP\n");/*******ERROR ERROR*********/
-                                                      break;
-                                                  }
-                                             }
-
-
-                                        }
-
-                                        if(chess[1][i1][j1] == chess[1][k1][l1] )
-                                        {   
-                                            q =1;
-                                            vhap = 1;
-                                            if(cond == 0)
-                                              printf("YOU CANNOT OVERRUN YOUR ARMY\n"); /************ERROR ERROR***************/
-                                        }
-
-
-                                        if(vhap ==0)
-                                        {
-                                             chess[0][k1][l1]=chess[0][i1][j1];
-                                             chess[1][k1][l1]=chess[1][i1][j1];
-                                             chess[0][i1][j1]=chess[1][i1][j1]=' ';
-
-                                        }
-
-                              }
-                        
-                           else
-                              {
-                                 q =1;
-                                 if(cond == 0)
-                                   printf("INVALID MOVE FOR ROOK\n"); /*******ERROR ERROR*********/
-                               
-                              }
-
-
-                   break;}/***END OF CASE 5 ***********/
-
-
-               default:
-                      { 
-                        q =1;
-                        if(cond == 0)
-                          printf("ROOK IS NOT AT THE SPECIFIED POSITION\n");/***********ERROR ERROR**************/
-                      }
-
-              }break; /*******************************END OF ROOK**************************************/
+                {
+                q = RookRules(ent1, fromRow,fromCol,toRow,toCol, printErrors, board);
+        }break;
 
 
 
@@ -847,7 +573,7 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int cond, char chess[2][8][8]
        case'6':/***************************************RULE OF NO-ENTITY 6 ****************************************/
              {
                    q =1;
-                   if(cond == 0)
+                   if(printErrors == 0)
                      printf("THERE IS NO ENTITY 6\n");/************ERROR ERROR***************/
 
              }break;/***********************************END OF NO-ENTITY 6 ****************************************/
@@ -857,14 +583,14 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int cond, char chess[2][8][8]
 
 
        case'7':/***************************************RULE OF QUEEN ****************************************/
-             switch(chess[0][i1][j1])/***CHECKS WHETHER QUEEN IS THERE OR NOT******/
+             switch(board[0][fromRow][fromCol])/***CHECKS WHETHER QUEEN IS THERE OR NOT******/
                  { case'7':
                            {
                          
-                            if(l1==j1)
+                            if(toCol==fromCol)
                              {/*******FOR VERTICAL MOVEMENT*************/
                                         int rip;
-                                        rip = k1 - i1;
+                                        rip = toRow - fromRow;
                                         int vap = rip-1;
 
                                         if(rip <0)
@@ -876,13 +602,13 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int cond, char chess[2][8][8]
                                         {
                                              if(rip>0)
                                              {
-                                                  if(chess[1][i1 + vap][j1] == ' ')
+                                                  if(board[1][fromRow + vap][fromCol] == ' ')
                                                   continue;
 
                                                   else
                                                   {   
                                                       q =1;
-                                                      if(cond == 0)
+                                                      if(printErrors == 0)
                                                         printf("QUEEN CAN'T JUMP\n");/*******ERROR ERROR*********/
                                                       break;
                                                   }
@@ -890,13 +616,13 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int cond, char chess[2][8][8]
 
                                              else if(rip<0)
                                              {
-                                                  if(chess[1][i1 - vap][j1] == ' ')
+                                                  if(board[1][fromRow - vap][fromCol] == ' ')
                                                   continue;
 
                                                   else
                                                   {
                                                       q =1;
-                                                      if(cond == 0)
+                                                      if(printErrors == 0)
                                                         printf("QUEEN CAN'T JUMP\n");/*******ERROR ERROR*********/
                                                       break;
                                                   }
@@ -904,29 +630,29 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int cond, char chess[2][8][8]
 
                                         }
 
-                                        if(chess[1][i1][j1] == chess[1][k1][l1] )
+                                        if(board[1][fromRow][fromCol] == board[1][toRow][toCol] )
                                         {
                                             q =1;
                                             vap = 1;
-                                            if(cond == 0)
+                                            if(printErrors == 0)
                                               printf("YOU CANNOT OVERRUN YOUR ARMY\n");/************ERROR ERROR***************/
                                         }
 
 
                                         if(vap ==0)
                                         {
-                                             chess[0][k1][l1]=chess[0][i1][j1];
-                                             chess[1][k1][l1]=chess[1][i1][j1];
-                                             chess[0][i1][j1]=chess[1][i1][j1]=' ';
+                                             board[0][toRow][toCol]=board[0][fromRow][fromCol];
+                                             board[1][toRow][toCol]=board[1][fromRow][fromCol];
+                                             board[0][fromRow][fromCol]=board[1][fromRow][fromCol]=' ';
 
                                         }
 
                              }
 
-                             else if(k1==i1)
+                             else if(toRow==fromRow)
                              {/******FOR HORIZONTAL MOVEMENT*************/
                                         int rhip;
-                                        rhip = l1 - j1;
+                                        rhip = toCol - fromCol;
                                         int vhap = rhip -1 ;
 
                                         if(rhip <0)
@@ -938,13 +664,13 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int cond, char chess[2][8][8]
                                         {
                                              if(rhip>0)
                                              {
-                                                  if(chess[1][i1][j1 + vhap] == ' ')
+                                                  if(board[1][fromRow][fromCol + vhap] == ' ')
                                                   continue;
 
                                                   else
                                                   {
                                                       q =1;
-                                                      if(cond == 0)
+                                                      if(printErrors == 0)
                                                         printf("QUEEN CAN'T JUMP\n");/*******ERROR ERROR*********/
                                                       break;
                                                   }
@@ -952,13 +678,13 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int cond, char chess[2][8][8]
 
                                              else if(rhip<0)
                                              {
-                                                  if(chess[1][i1][j1 - vhap] == ' ')
+                                                  if(board[1][fromRow][fromCol - vhap] == ' ')
                                                   continue;
 
                                                   else
                                                   {
                                                       q =1;
-                                                      if(cond == 0)
+                                                      if(printErrors == 0)
                                                         printf("QUEEN CAN'T JUMP\n");/*******ERROR ERROR*********/
                                                       break;
                                                   }
@@ -967,20 +693,20 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int cond, char chess[2][8][8]
 
                                         }
 
-                                        if(chess[1][i1][j1] == chess[1][k1][l1] )
+                                        if(board[1][fromRow][fromCol] == board[1][toRow][toCol] )
                                         {
                                             q =1;
                                             vhap = 1;
-                                            if(cond == 0)
+                                            if(printErrors == 0)
                                               printf("YOU CANNOT OVERRUN YOUR ARMY\n"); /************ERROR ERROR***************/
                                         }
 
 
                                         if(vhap ==0)
                                         {
-                                             chess[0][k1][l1]=chess[0][i1][j1];
-                                             chess[1][k1][l1]=chess[1][i1][j1];
-                                             chess[0][i1][j1]=chess[1][i1][j1]=' ';
+                                             board[0][toRow][toCol]=board[0][fromRow][fromCol];
+                                             board[1][toRow][toCol]=board[1][fromRow][fromCol];
+                                             board[0][fromRow][fromCol]=board[1][fromRow][fromCol]=' ';
 
                                         }
 
@@ -989,10 +715,10 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int cond, char chess[2][8][8]
  
                               else
                               {    int bis;
-                                   bis = k1 - i1;
+                                   bis = toRow - fromRow;
                                    /*printf("%d\n",bis);*/
 
-                                   if(l1 == bis + j1 || l1 == (-1)*bis + j1)
+                                   if(toCol == bis + fromCol || toCol == (-1)*bis + fromCol)
                                    {      int var = bis - 1;
 
 
@@ -1002,58 +728,58 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int cond, char chess[2][8][8]
 
                                           for(var; var >0; var--)
                                           {
-                                               if(bis > 0 && l1 > j1)
+                                               if(bis > 0 && toCol > fromCol)
                                                {
-                                                   if(chess[1][i1+var][j1+var] == ' ')
+                                                   if(board[1][fromRow+var][fromCol+var] == ' ')
                                                    continue;
 
                                                    else
                                                    {
                                                        q =1;
-                                                       if(cond == 0)
+                                                       if(printErrors == 0)
                                                          printf("QUEEN CAN'T JUMP\n");/*******ERROR ERROR*********/
                                                        break;
                                                    }
                                                }
 
-                                               else if(bis > 0 && l1 < j1)
+                                               else if(bis > 0 && toCol < fromCol)
                                                {
-                                                   if(chess[1][i1+var][j1-var] == ' ')
+                                                   if(board[1][fromRow+var][fromCol-var] == ' ')
                                                    continue;
 
                                                    else
                                                    {
 						       q =1;
-                                                       if(cond == 0)
+                                                       if(printErrors == 0)
                                                          printf("QUEEN CAN'T JUMP\n");/*******ERROR ERROR*********/
                                                        break;
                                                    }
                                                }
 
-                                               else if(bis < 0 && l1 > j1)
+                                               else if(bis < 0 && toCol > fromCol)
                                                {   
-                                                   if(chess[1][i1-var][j1+var] == ' ')
+                                                   if(board[1][fromRow-var][fromCol+var] == ' ')
                                                    continue;
 
                                                    else
                                                    {   
                                                        q =1;
-                                                       if(cond == 0)
+                                                       if(printErrors == 0)
                                                          printf("QUEEN CAN'T JUMP\n");/*******ERROR ERROR*********/
                                                        break;
 
                                                    }
                                                }
 
-                                               if(bis < 0 && l1 < j1)
+                                               if(bis < 0 && toCol < fromCol)
                                                {   
-                                                   if(chess[1][i1-var][j1-var] == ' ')
+                                                   if(board[1][fromRow-var][fromCol-var] == ' ')
                                                    continue;
 
                                                    else
                                                    {   
                                                        q =1;
-                                                       if(cond == 0)
+                                                       if(printErrors == 0)
                                                          printf("QUEEN CAN'T JUMP\n");/*******ERROR ERROR*********/
                                                        break;
 
@@ -1063,20 +789,20 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int cond, char chess[2][8][8]
                                           }
 
 
-                                          if(chess[1][i1][j1] == chess[1][k1][l1])
+                                          if(board[1][fromRow][fromCol] == board[1][toRow][toCol])
                                           {
                                               q =1;
                                               var = 1;
-                                              if(cond == 0)
+                                              if(printErrors == 0)
                                                 printf("YOU CANNOT OVERRUN YOUR ARMY\n"); /************ERROR ERROR***************/
                                           }
 
 
                                           if(var == 0)
                                           {
-                                              chess[0][k1][l1]=chess[0][i1][j1];
-                                              chess[1][k1][l1]=chess[1][i1][j1];
-                                              chess[0][i1][j1]=chess[1][i1][j1]=' ';
+                                              board[0][toRow][toCol]=board[0][fromRow][fromCol];
+                                              board[1][toRow][toCol]=board[1][fromRow][fromCol];
+                                              board[0][fromRow][fromCol]=board[1][fromRow][fromCol]=' ';
 
                                           }
 
@@ -1085,7 +811,7 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int cond, char chess[2][8][8]
                                    else
                                    {
                                             q =1;
-                                            if(cond == 0)
+                                            if(printErrors == 0)
                                               printf("INVALID MOVE FOR QUEEN\n");/*******ERROR ERROR*********/
                                    }
 
@@ -1099,7 +825,7 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int cond, char chess[2][8][8]
                 default:
                       {
                         q =1;
-                        if(cond == 0)
+                        if(printErrors == 0)
                           printf("QUEEN IS NOT AT THE SPECIFIED POSITION\n");/***********ERROR ERROR**************/
                       }
                  
@@ -1109,91 +835,361 @@ int compute(char ent1,int i1,int j1,int k1,int l1, int cond, char chess[2][8][8]
 
 
        case'9':/***************************************RULE OF KING ****************************************/
-             switch(chess[0][i1][j1])/***CHECKS WHETHER QUEEN IS THERE OR NOT******/
-             {case'9':
-                     {
-                       
-                        if( (k1 == i1 + 1 || k1 == i1-1) && (l1 == j1 || l1==j1-1 || l1 == j1+1) )
-                        {
+	     q = checkKingMove(ent1, fromRow, fromCol, toRow, toCol, printErrors, board);
 
-                              if(chess[1][i1][j1] == chess[1][k1][l1])
-                              {  
-                                  q =1; 
-                                  if(cond == 0)
-                                    printf("YOU CANNOT OVERRUN YOUR ARMY\n"); /************ERROR ERROR***************/
-                              }
+	     break;/***********************************END OF KING **************************************/
 
 
-                              else
-                              {
-                                  chess[0][k1][l1]=chess[0][i1][j1];
-                                  chess[1][k1][l1]=chess[1][i1][j1];
-                                  chess[0][i1][j1]=chess[1][i1][j1]=' ';
-
-                               }
-
-
-                        }  
-
-                        else if( (k1 == i1) && (l1==j1-1 || l1 == j1+1) )
-                        {
-
-                              if(chess[1][i1][j1] == chess[1][k1][l1])
-                              {
-                                  q =1;
-                                  if(cond == 0)
-                                    printf("YOU CANNOT OVERRUN YOUR ARMY\n"); /************ERROR ERROR***************/
-                              }
-
-
-                              else                                  
-                              {
-                                  chess[0][k1][l1]=chess[0][i1][j1];
-                                  chess[1][k1][l1]=chess[1][i1][j1];
-                                  chess[0][i1][j1]=chess[1][i1][j1]=' ';
-
-                               }
-
-
-                        }
-
-                   
-                        else
-                        {
-                               q =1;
-                               if(cond == 0)
-                                 printf("ILLEGAL MOVE FOR KING\n"); /************ERROR ERROR***************/
-                        }
-                    
-
-
-               break;}/********END OF CASE 9 ************/
-
-
-                default:
-                      { 
-                        q =1;
-                        if(cond == 0)
-                          printf("KING IS NOT AT THE SPECIFIED POSITION\n");/***********ERROR ERROR**************/
-                      }
-
-
-             }break;/***********************************END OF KING **************************************/
-
-
-       default:{ 
-                if(cond == 0)
-                  printf("OTHER THAN THE ALLOWED NUMBERS , CHARACTERS NOT ALLOWED AS ENTITY\nLOOK INTO HELP\n");/************ERROR ERROR***************/
-               }
-
-     }/*****************END OF SWITCH(ENTITY)************************/
+    default:
+      if(printErrors == 0)
+        printf("THERE IS NO ENTITY %c\n", ent1);
+      break;
+  }/*****************END OF SWITCH(ENTITY)************************/
    
-    return q;    
+    return q;
 
 }/*END OF COMPUTE*/
 
 
+// Checks that the pawn can move and performs it
+int checkPawnMove(int fromRow, int fromCol, int toRow, int toCol, int printErrors, char board[2][8][8]) {
+  // Return 1 if an error occurred, 0 if successful
+  int error = 0;
 
+  // If the piece belongs to player 1 (top)
+  if (board[1][fromRow][fromCol]=='1') {
+    // Check if the move would overrun a friendly piece
+    if ((board[1][toRow][toCol]== '1' && toCol==fromCol) || (fromRow == 1 && board[1][2][fromCol] == '1' && fromCol==toCol)) {
+      error = 1;
+      if(printErrors == 0)
+        printf("PLAYER 1 YOU CAN NOT OVERRUN YOUR ARMY\n"); /* ===== Error ===== */
+    }
+
+    // Check if the move would jump over an opponent piece
+    else if (board[1][2][fromCol] == '2') {
+      error = 1;
+      if(printErrors == 0)
+        printf("PLAYER 1 PAWN CAN'T JUMP OVER THE ENEMY\n");  /* ===== Error ===== */
+    }
+
+    else {
+      // Check if the pawn is at its initial position (allow move forward 2)
+      if (fromRow == 1 && (toRow == fromRow + 1 || toRow == fromRow + 2) && toCol == fromCol) {
+        // Make the move if the space is empty
+        if (board[1][toRow][toCol] == ' ') {
+          board[0][toRow][toCol]=board[0][fromRow][fromCol];
+          board[1][toRow][toCol]=board[1][fromRow][fromCol];
+          board[0][fromRow][fromCol]=board[1][fromRow][fromCol]=' ';
+        }
+        // Otherwise, give an error
+        else {
+          error = 1;
+          if (printErrors == 0)
+            printf("ILLEGAL MOVE\n");  /* ===== Error ===== */
+        }
+      }
+
+      // Otherwise use rules for non-starting space moves forward
+      else if (toRow==fromRow+1 && toCol==fromCol) {
+        // Make the move if the space is empty
+        if (board[1][toRow][toCol] == ' ') {
+          board[0][toRow][toCol]=board[0][fromRow][fromCol];
+          board[1][toRow][toCol]=board[1][fromRow][fromCol];
+          board[0][fromRow][fromCol]=board[1][fromRow][fromCol]=' ';
+        }
+        // Otherwise give an error
+        else {
+          error = 1;
+          if (printErrors == 0)
+            printf("ILLEGAL MOVE\n"); /* ===== Error ===== */
+        }
+      }
+
+      // If the pawn is moving diagonally, only allow it to take pieces
+      else if (toRow == fromRow+1 && (toCol==fromCol-1 || toCol==fromCol+1)) {
+        // Make the move if the space has an opponent piece
+        if (board[1][toRow][toCol] == '2') {
+            board[0][toRow][toCol]=board[0][fromRow][fromCol];
+            board[1][toRow][toCol]=board[1][fromRow][fromCol];   
+            board[0][fromRow][fromCol]=board[1][fromRow][fromCol]=' ';
+        }
+        // Otherwise give an error
+        else {
+          error = 1;
+          if(printErrors == 0)
+            printf("ILLEGAL MOVE\n"); /* ===== Error ===== */
+        }
+      }
+
+      // Any other moves are illegal
+      else
+      {    error = 1;
+            if(printErrors == 0)
+              printf("PLAYER 1 ILLEGAL MOVE\n");  /* ===== Error ===== */
+
+      }
+    }
+  }
+
+  // Else if piece belongs to player 2 (bottom)
+  else if (board[1][fromRow][fromCol]=='2') {
+    // Check if the move overruns a friendly piece
+    if ((board[1][toRow][toCol]== '2' && toCol == fromCol) || (fromRow==6 && board[1][5][fromCol] == '2' && fromCol == toCol)) {
+      error = 1;
+      if (printErrors == 0)  
+        printf("PLAYER 2 YOU CAN NOT OVERRUN YOUR ARMY\n"); /* ===== Error ===== */
+    }
+    // Check if the move jumps over an opponent's piece
+    else if (board[1][5][fromCol] == '1') {
+      error = 1;
+      if(printErrors == 0)
+        printf("PLAYER 2 PAWN CAN'T JUMP OVER THE ENEMY\n");  /* ===== Error ===== */
+    }
+    else {
+      // Check if the pawn is at its initial position (allow move 2 forward)
+      if (fromRow == 6 && (toRow == fromRow - 1 || toRow == fromRow - 2) && toCol == fromCol) {
+          // If the space is empty, perform the move
+          if(board[1][toRow][toCol] == ' ') {
+            board[0][toRow][toCol]=board[0][fromRow][fromCol];
+            board[1][toRow][toCol]=board[1][fromRow][fromCol];
+            board[0][fromRow][fromCol]=board[1][fromRow][fromCol]=' ';
+          }
+          // Otherwise, give an error
+          else {
+            error = 1;
+            if(printErrors == 0)
+              printf("ILLEGAL MOVE\n"); /* ===== Error ===== */
+          }
+      }
+
+      // If it is anywhere else, do not allow moving 2 spaces forward
+      else if (toRow == fromRow - 1 && toCol == fromCol) {
+        // If the space is empty, perform the move
+        if (board[1][toRow][toCol] == ' ') {
+          board[0][toRow][toCol]=board[0][fromRow][fromCol];
+          board[1][toRow][toCol]=board[1][fromRow][fromCol];
+          board[0][fromRow][fromCol]=board[1][fromRow][fromCol]=' ';
+        }
+        // Otherwise, give an error
+        else {
+          error = 1;
+          if(printErrors == 0)
+            printf("ILLEGAL MOVE\n"); /* ===== Error ===== */
+        }
+      }
+
+      // If moving diagonally, only allow pawn to take pieces
+      else if (toRow == fromRow - 1 && (toCol == fromCol - 1 || toCol == fromCol + 1)) {
+        // If the space has an opponent's piece, move into it and take it
+        if (board[1][toRow][toCol] == '1') {
+          board[0][toRow][toCol]=board[0][fromRow][fromCol];
+          board[1][toRow][toCol]=board[1][fromRow][fromCol];
+          board[0][fromRow][fromCol]=board[1][fromRow][fromCol]=' ';
+        }
+        // Otherwise, give an error
+        else {
+          error = 1;
+          if(printErrors == 0)
+            printf("ILLEGAL MOVE\n"); /* ===== Error ===== */
+        }
+      }
+
+      // Any other moves are illegal
+      else {
+        error = 1;   
+        if(printErrors == 0)
+          printf("YOUR MOVE IS ILLEGAL\n");/************ERROR ERROR***************/
+      }
+    }
+  }
+}
+
+int checkBishopMove(char ent1, int fromRow, int fromCol, int toRow, int toCol, int printErrors, char board[2][8][8]){
+
+   int q = 0;
+
+   switch(board[0][fromRow][fromCol])
+   { case '4': /***CHECKS WHETHER BISHOP IS THERE OR NOT******/
+      {    int bis;
+	 bis = toRow - fromRow;                                     
+	 /*   printf("%d\n",bis);*/
+	 if(toCol == bis + fromCol || toCol == (-1)*bis + fromCol)
+	 {      
+	    int var = bis - 1;
+	    if(bis < 0){
+	       var = (-1)*bis -1;
+	    }
+	    for(var; var >0; var--)
+	    {    
+	       if(bis > 0 && toCol > fromCol)
+	       { 
+		  if(board[1][fromRow+var][fromCol+var] == ' ')
+   						      continue;     
+
+		  else
+		  {
+		     q =1;
+		     if(printErrors == 0)
+			printf("BISHOP CAN'T JUMP\n");/*******ERROR ERROR*********/
+		     break;
+		  }
+	       }
+
+               
+	       else if(bis > 0 && toCol < fromCol)
+	       {
+		  if(board[1][fromRow+var][fromCol-var] == ' ')
+		     continue;
+		  else
+		  {
+		     q =1;
+		     if(printErrors == 0)
+			printf("BISHOP CAN'T JUMP\n");/*******ERROR ERROR*********/
+		     break;
+		  }
+	       }
+
+	       else if(bis < 0 && toCol > fromCol)
+	       {
+		  if(board[1][fromRow-var][fromCol+var] == ' ')
+		     continue;
+		  else
+		  {
+		     q =1;
+		     if(printErrors == 0)
+			printf("BISHOP CAN'T JUMP\n");/*******ERROR ERROR*********/
+		     break;
+
+		  }
+	       }
+
+                  
+	       if(bis < 0 && toCol < fromCol)
+	       {
+		  if(board[1][fromRow-var][fromCol-var] == ' ')
+		     continue;
+		  else
+		  {
+		     q =1;
+		     if(printErrors == 0)
+			printf("BISHOP CAN'T JUMP\n");/*******ERROR ERROR*********/
+		     break;
+		  }
+	       }
+
+	    }
+
+	    if(board[1][fromRow][fromCol] == board[1][toRow][toCol])
+	    {
+	       q =1;
+	       var = 1;
+	       if(printErrors == 0)
+		  printf("YOU CANNOT OVERRUN YOUR ARMY\n"); /************ERROR ERROR***************/
+	    }
+
+
+	    if(var == 0)
+	    {
+	       board[0][toRow][toCol]=board[0][fromRow][fromCol];
+	       board[1][toRow][toCol]=board[1][fromRow][fromCol];
+	       board[0][fromRow][fromCol]=board[1][fromRow][fromCol]=' ';
+
+	    }
+
+	 }
+
+         
+	 else
+	 {
+	    q =1;
+	    if(printErrors == 0)
+	       printf("INVALID MOVE OF BISHOP\n"); /************ERROR ERROR***************/
+	 }
+                              
+
+	 break;}/***END OF CASE 4 ***********/
+
+
+      default:
+      {   q =1;
+	 if(printErrors == 0)
+	    printf("BISHOP IS NOT AT THE SPECIFIED POSITION\n"); /************ERROR ERROR***************/
+      }
+   }
+   
+   return q;
+
+}
+
+int checkKingMove(char ent1, int fromRow, int fromCol, int toRow, int toCol, int printErrors, char board[2][8][8]){
+
+   int q = 0;
+             
+   switch(board[0][fromRow][fromCol])/***CHECKS WHETHER QUEEN IS THERE OR NOT******/
+   {case'9':
+      {
+
+	 if( (toRow == fromRow + 1 || toRow == fromRow-1) && (toCol == fromCol || toCol==fromCol-1 || toCol == fromCol+1) )
+	 {
+
+	    if(board[1][fromRow][fromCol] == board[1][toRow][toCol])
+	    {  
+	       q =1; 
+	       if(printErrors == 0)
+		  printf("YOU CANNOT OVERRUN YOUR ARMY\n"); /************ERROR ERROR***************/
+	    }
+
+	    else
+	    {
+	       board[0][toRow][toCol]=board[0][fromRow][fromCol];
+	       board[1][toRow][toCol]=board[1][fromRow][fromCol];
+	       board[0][fromRow][fromCol]=board[1][fromRow][fromCol]=' ';
+
+	    }
+
+	 }  
+
+	 else if( (toRow == fromRow) && (toCol==fromCol-1 || toCol == fromCol+1) )
+	 {
+	    if(board[1][fromRow][fromCol] == board[1][toRow][toCol])
+	    {
+	       q =1;
+	       if(printErrors == 0)
+		  printf("YOU CANNOT OVERRUN YOUR ARMY\n"); /************ERROR ERROR***************/
+	    }
+
+	    else                                  
+	    {
+	       board[0][toRow][toCol]=board[0][fromRow][fromCol];
+	       board[1][toRow][toCol]=board[1][fromRow][fromCol];
+	       board[0][fromRow][fromCol]=board[1][fromRow][fromCol]=' ';
+               
+	    }
+
+	 }
+
+	 else
+	 {
+	    q =1;
+	    if(printErrors == 0)
+	       printf("ILLEGAL MOVE FOR KING\n"); /************ERROR ERROR***************/
+	 }
+
+	 break;}/********END OF CASE 9 ************/
+
+      default:
+      { 
+	 q =1;
+	 if(printErrors == 0)
+	    printf("KING IS NOT AT THE SPECIFIED POSITION\n");/***********ERROR ERROR**************/
+      }
+   }
+
+      return q;
+
+}
+
+// Prints current board state to console
 void printing(char chp [2][8][8])
 {     
      int a,b;
