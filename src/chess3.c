@@ -25,6 +25,8 @@ int compute(char ent1, int fromRow, int fromCol, int toRow, int toCol, int print
 // Checks that the pawn can move
 int checkPawnMove(int fromRow, int fromCol, int toRow, int toCol, int printErrors, char board[2][8][8]);
 
+int checkBishopMove(char ent1, int fromRow, int fromCol, int toRow, int toCol, int printErrors, char chess[2][8][8]);
+
 // Prints the game board & instructions
 void printing(char chp [2][8][8]);
 
@@ -557,126 +559,10 @@ int compute(char ent1, int fromRow, int fromCol, int toRow, int toCol, int print
 
 
 
-       case'4':/****************************************RULES OF BISHOP****************************************/
-              switch(chess[0][fromRow][fromCol])
-                     { case '4': /***CHECKS WHETHER BISHOP IS THERE OR NOT******/
-                              {    int bis;
-                                   bis = toRow - fromRow;                                     
-                                /*   printf("%d\n",bis);*/
 
-                                   if(toCol == bis + fromCol || toCol == (-1)*bis + fromCol)
-                                   {      int var = bis - 1;
-                                           
-
-                                          if(bis < 0){
-                                               var = (-1)*bis -1;
-                                           }
-                                     
-                                          for(var; var >0; var--)
-                                          {    
-                                               if(bis > 0 && toCol > fromCol)
-                                               { 
-                                                   if(chess[1][fromRow+var][fromCol+var] == ' ')
-                                                   continue;     
-
-                                                   else
-                                                   {
-                                                       q =1;
-                                                       if(printErrors == 0)
-                                                         printf("BISHOP CAN'T JUMP\n");/*******ERROR ERROR*********/
-                                                       break;
-                                                   }
-                                               }
-
-                                               else if(bis > 0 && toCol < fromCol)
-                                               {
-                                                   if(chess[1][fromRow+var][fromCol-var] == ' ')
-                                                   continue;
-
-                                                   else
-                                                   {
-                                                       q =1;
-                                                       if(printErrors == 0)
-                                                         printf("BISHOP CAN'T JUMP\n");/*******ERROR ERROR*********/
-                                                       break;
-                                                   }
-                                               }
-
-                                               else if(bis < 0 && toCol > fromCol)
-                                               {
-                                                   if(chess[1][fromRow-var][fromCol+var] == ' ')
-                                                   continue;
-
-                                                   else
-                                                   {
-                                                       q =1;
-                                                       if(printErrors == 0)
-                                                         printf("BISHOP CAN'T JUMP\n");/*******ERROR ERROR*********/
-                                                       break;
-
-                                                   }
-                                               }
-
-                                               if(bis < 0 && toCol < fromCol)
-                                               {
-                                                   if(chess[1][fromRow-var][fromCol-var] == ' ')
-                                                   continue;
-
-                                                   else
-                                                   {
-                                                       q =1;
-                                                       if(printErrors == 0)
-                                                         printf("BISHOP CAN'T JUMP\n");/*******ERROR ERROR*********/
-                                                       break;
-
-                                                   }
-                                               }
-
-                                          }
-
-
-                                          if(chess[1][fromRow][fromCol] == chess[1][toRow][toCol])
-                                          {
-                                              q =1;
-                                              var = 1;
-                                              if(printErrors == 0)
-                                                printf("YOU CANNOT OVERRUN YOUR ARMY\n"); /************ERROR ERROR***************/
-                                          }
-
-
-                                          if(var == 0)
-                                          {
-                                              chess[0][toRow][toCol]=chess[0][fromRow][fromCol];
-                                              chess[1][toRow][toCol]=chess[1][fromRow][fromCol];
-                                              chess[0][fromRow][fromCol]=chess[1][fromRow][fromCol]=' ';
-
-                                          }
-
-                                   }
-
-                                   else
-                                   {
-                                         q =1;
-                                         if(printErrors == 0)
-                                           printf("INVALID MOVE OF BISHOP\n"); /************ERROR ERROR***************/
-                                   }
-                              
-
-
-
-
-                 break;}/***END OF CASE 4 ***********/
-
-                 default:
-                        {   q =1;
-                            if(printErrors == 0)
-                              printf("BISHOP IS NOT AT THE SPECIFIED POSITION\n"); /************ERROR ERROR***************/
-                        }
-
-
-              }break; /*********************************END OF BISHOP**************************************/
-
-
+    case '4':/****************************************RULES OF BISHOP****************************************/
+	     q = checkBishopMove(ent1, fromRow, fromCol, toRow, toCol, printErrors, chess);
+	     break;
 
        case '5' : /******************************************RULES FOR ROOK*********************************/
                 {
@@ -1185,6 +1071,123 @@ int checkPawnMove(int fromRow, int fromCol, int toRow, int toCol, int printError
       }
     }
   }
+}
+
+int checkBishopMove(char ent1, int fromRow, int fromCol, int toRow, int toCol, int printErrors, char chess[2][8][8]){
+
+   int q = 0;
+
+   switch(chess[0][fromRow][fromCol])
+   { case '4': /***CHECKS WHETHER BISHOP IS THERE OR NOT******/
+      {    int bis;
+	 bis = toRow - fromRow;                                     
+	 /*   printf("%d\n",bis);*/
+	 if(toCol == bis + fromCol || toCol == (-1)*bis + fromCol)
+	 {      
+	    int var = bis - 1;
+	    if(bis < 0){
+	       var = (-1)*bis -1;
+	    }
+	    for(var; var >0; var--)
+	    {    
+	       if(bis > 0 && toCol > fromCol)
+	       { 
+		  if(chess[1][fromRow+var][fromCol+var] == ' ')
+   						      continue;     
+
+		  else
+		  {
+		     q =1;
+		     if(printErrors == 0)
+			printf("BISHOP CAN'T JUMP\n");/*******ERROR ERROR*********/
+		     break;
+		  }
+	       }
+
+               
+	       else if(bis > 0 && toCol < fromCol)
+	       {
+		  if(chess[1][fromRow+var][fromCol-var] == ' ')
+		     continue;
+		  else
+		  {
+		     q =1;
+		     if(printErrors == 0)
+			printf("BISHOP CAN'T JUMP\n");/*******ERROR ERROR*********/
+		     break;
+		  }
+	       }
+
+	       else if(bis < 0 && toCol > fromCol)
+	       {
+		  if(chess[1][fromRow-var][fromCol+var] == ' ')
+		     continue;
+		  else
+		  {
+		     q =1;
+		     if(printErrors == 0)
+			printf("BISHOP CAN'T JUMP\n");/*******ERROR ERROR*********/
+		     break;
+
+		  }
+	       }
+
+                  
+	       if(bis < 0 && toCol < fromCol)
+	       {
+		  if(chess[1][fromRow-var][fromCol-var] == ' ')
+		     continue;
+		  else
+		  {
+		     q =1;
+		     if(printErrors == 0)
+			printf("BISHOP CAN'T JUMP\n");/*******ERROR ERROR*********/
+		     break;
+		  }
+	       }
+
+	    }
+
+	    if(chess[1][fromRow][fromCol] == chess[1][toRow][toCol])
+	    {
+	       q =1;
+	       var = 1;
+	       if(printErrors == 0)
+		  printf("YOU CANNOT OVERRUN YOUR ARMY\n"); /************ERROR ERROR***************/
+	    }
+
+
+	    if(var == 0)
+	    {
+	       chess[0][toRow][toCol]=chess[0][fromRow][fromCol];
+	       chess[1][toRow][toCol]=chess[1][fromRow][fromCol];
+	       chess[0][fromRow][fromCol]=chess[1][fromRow][fromCol]=' ';
+
+	    }
+
+	 }
+
+         
+	 else
+	 {
+	    q =1;
+	    if(printErrors == 0)
+	       printf("INVALID MOVE OF BISHOP\n"); /************ERROR ERROR***************/
+	 }
+                              
+
+	 break;}/***END OF CASE 4 ***********/
+
+
+      default:
+      {   q =1;
+	 if(printErrors == 0)
+	    printf("BISHOP IS NOT AT THE SPECIFIED POSITION\n"); /************ERROR ERROR***************/
+      }
+   }
+   
+   return q;
+
 }
 
 // Prints current board state to console
