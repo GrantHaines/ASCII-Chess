@@ -92,12 +92,8 @@ int main(int argc, char *argv[])
 
 /***************************************TAKING THE INPUT**********************************************/
     if(checker%2 ==0)
-    { 
-       int loop =0;						/********Delay Loop********/
-       for(loop;loop<=1000000000;loop++)	/******To enhance the gameplay and make it look more real******/
-       {
-          ;
-       };
+    {
+      sleep(2); 
        AIfunc(chess);
        checker++;
      }
