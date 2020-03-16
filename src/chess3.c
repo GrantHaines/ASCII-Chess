@@ -27,6 +27,8 @@ int checkPawnMove(int fromRow, int fromCol, int toRow, int toCol, int printError
 
 int checkBishopMove(char ent1, int fromRow, int fromCol, int toRow, int toCol, int printErrors, char chess[2][8][8]);
 
+int checkKingMove(char ent1, int fromRow, int fromCol, int toRow, int toCol, int printErrors, char chess[2][8][8]);
+
 // Prints the game board & instructions
 void printing(char chp [2][8][8]);
 
@@ -837,76 +839,9 @@ int compute(char ent1, int fromRow, int fromCol, int toRow, int toCol, int print
 
 
        case'9':/***************************************RULE OF KING ****************************************/
-             switch(chess[0][fromRow][fromCol])/***CHECKS WHETHER QUEEN IS THERE OR NOT******/
-             {case'9':
-                     {
-                       
-                        if( (toRow == fromRow + 1 || toRow == fromRow-1) && (toCol == fromCol || toCol==fromCol-1 || toCol == fromCol+1) )
-                        {
+	     q = checkKingMove(ent1, fromRow, fromCol, toRow, toCol, printErrors, chess[2][8][8]);
 
-                              if(chess[1][fromRow][fromCol] == chess[1][toRow][toCol])
-                              {  
-                                  q =1; 
-                                  if(printErrors == 0)
-                                    printf("YOU CANNOT OVERRUN YOUR ARMY\n"); /************ERROR ERROR***************/
-                              }
-
-
-                              else
-                              {
-                                  chess[0][toRow][toCol]=chess[0][fromRow][fromCol];
-                                  chess[1][toRow][toCol]=chess[1][fromRow][fromCol];
-                                  chess[0][fromRow][fromCol]=chess[1][fromRow][fromCol]=' ';
-
-                               }
-
-
-                        }  
-
-                        else if( (toRow == fromRow) && (toCol==fromCol-1 || toCol == fromCol+1) )
-                        {
-
-                              if(chess[1][fromRow][fromCol] == chess[1][toRow][toCol])
-                              {
-                                  q =1;
-                                  if(printErrors == 0)
-                                    printf("YOU CANNOT OVERRUN YOUR ARMY\n"); /************ERROR ERROR***************/
-                              }
-
-
-                              else                                  
-                              {
-                                  chess[0][toRow][toCol]=chess[0][fromRow][fromCol];
-                                  chess[1][toRow][toCol]=chess[1][fromRow][fromCol];
-                                  chess[0][fromRow][fromCol]=chess[1][fromRow][fromCol]=' ';
-
-                               }
-
-
-                        }
-
-                   
-                        else
-                        {
-                               q =1;
-                               if(printErrors == 0)
-                                 printf("ILLEGAL MOVE FOR KING\n"); /************ERROR ERROR***************/
-                        }
-                    
-
-
-               break;}/********END OF CASE 9 ************/
-
-
-                default:
-                      { 
-                        q =1;
-                        if(printErrors == 0)
-                          printf("KING IS NOT AT THE SPECIFIED POSITION\n");/***********ERROR ERROR**************/
-                      }
-
-
-             }break;/***********************************END OF KING **************************************/
+	     break;/***********************************END OF KING **************************************/
 
 
     default:
@@ -1187,6 +1122,74 @@ int checkBishopMove(char ent1, int fromRow, int fromCol, int toRow, int toCol, i
    }
    
    return q;
+
+}
+
+int checkKingMove(char ent1, int fromRow, int fromCol, int toRow, int toCol, int printErrors, char chess[2][8][8]){
+
+   int q = 0;
+             
+   switch(chess[0][fromRow][fromCol])/***CHECKS WHETHER QUEEN IS THERE OR NOT******/
+   {case'9':
+      {
+
+	 if( (toRow == fromRow + 1 || toRow == fromRow-1) && (toCol == fromCol || toCol==fromCol-1 || toCol == fromCol+1) )
+	 {
+
+	    if(chess[1][fromRow][fromCol] == chess[1][toRow][toCol])
+	    {  
+	       q =1; 
+	       if(printErrors == 0)
+		  printf("YOU CANNOT OVERRUN YOUR ARMY\n"); /************ERROR ERROR***************/
+	    }
+
+	    else
+	    {
+	       chess[0][toRow][toCol]=chess[0][fromRow][fromCol];
+	       chess[1][toRow][toCol]=chess[1][fromRow][fromCol];
+	       chess[0][fromRow][fromCol]=chess[1][fromRow][fromCol]=' ';
+
+	    }
+
+	 }  
+
+	 else if( (toRow == fromRow) && (toCol==fromCol-1 || toCol == fromCol+1) )
+	 {
+	    if(chess[1][fromRow][fromCol] == chess[1][toRow][toCol])
+	    {
+	       q =1;
+	       if(printErrors == 0)
+		  printf("YOU CANNOT OVERRUN YOUR ARMY\n"); /************ERROR ERROR***************/
+	    }
+
+	    else                                  
+	    {
+	       chess[0][toRow][toCol]=chess[0][fromRow][fromCol];
+	       chess[1][toRow][toCol]=chess[1][fromRow][fromCol];
+	       chess[0][fromRow][fromCol]=chess[1][fromRow][fromCol]=' ';
+               
+	    }
+
+	 }
+
+	 else
+	 {
+	    q =1;
+	    if(printErrors == 0)
+	       printf("ILLEGAL MOVE FOR KING\n"); /************ERROR ERROR***************/
+	 }
+
+	 break;}/********END OF CASE 9 ************/
+
+      default:
+      { 
+	 q =1;
+	 if(printErrors == 0)
+	    printf("KING IS NOT AT THE SPECIFIED POSITION\n");/***********ERROR ERROR**************/
+      }
+   }
+
+      return q;
 
 }
 
