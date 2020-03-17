@@ -25,7 +25,11 @@ int compute(char ent1, int fromRow, int fromCol, int toRow, int toCol, int print
 // Checks that the pawn can move
 int checkPawnMove(int fromRow, int fromCol, int toRow, int toCol, int printErrors, char board[2][8][8]);
 
+int checkKnightMove(char ent1, int fromRow, int fromCol, int toRow, int toCol, int printErrors, char chess[2][8][8]);
+
 int checkBishopMove(char ent1, int fromRow, int fromCol, int toRow, int toCol, int printErrors, char chess[2][8][8]);
+
+int checkRookMove(char ent1, int fromRow, int fromCol, int toRow, int toCol, int printErrors, char chess[2][8][8]);
 
 int checkKingMove(char ent1, int fromRow, int fromCol, int toRow, int toCol, int printErrors, char chess[2][8][8]);
 
@@ -305,232 +309,6 @@ int main(int argc, char *argv[])
    return 0;
 }
 
-
-
-
-int RookRules(char ent1, int fromRow, int fromCol, int toRow, int toCol, int printErrors, char chess[2][8][8]) {
-  int q = 0;
-  switch(chess[0][fromRow][fromCol]){ 
-    case '5':/***CHECKS WHETHER ROOK IS THERE OR NOT******/
-            {
-                  if(toCol==fromCol)
-                  {/*******FOR VERTICAL MOVEMENT*************/
-                            int rip;
-                            rip = toRow - fromRow;
-                            int vap = rip-1;           
-
-                            if(rip <0)
-                            {
-                                vap = (-1)*rip-1;
-                            }
-
-                            for(vap; vap>0; vap--)
-                            { 
-                                  if(rip>0)
-                                  {   
-                                      if(chess[1][fromRow + vap][fromCol] == ' ')
-                                      continue;
-
-                                      else
-                                      {  
-                                          q =1; 
-                                          if(printErrors == 0)
-                                            printf("ROOK CAN'T JUMP\n");/*******ERROR ERROR*********/
-                                          break;
-                                      }
-                                  }
-
-                                  else if(rip<0)
-                                  {
-                                      if(chess[1][fromRow - vap][fromCol] == ' ')
-                                      continue;
-            
-                                      else
-                                      {
-                                          q =1;
-                                          if(printErrors == 0)
-                                            printf("ROOK CAN'T JUMP\n");/*******ERROR ERROR*********/
-                                          break;
-                                      }
-                                  }
-
-                            }
-
-                            if(chess[1][fromRow][fromCol] == chess[1][toRow][toCol] )
-                            {
-                                q =1;
-                                vap = 1;
-                                if(printErrors == 0)
-                                  printf("YOU CANNOT OVERRUN YOUR ARMY\n");/************ERROR ERROR***************/
-                            }
-
-
-                            if(vap ==0)
-                            {
-                                  chess[0][toRow][toCol]=chess[0][fromRow][fromCol];
-                                  chess[1][toRow][toCol]=chess[1][fromRow][fromCol];
-                                  chess[0][fromRow][fromCol]=chess[1][fromRow][fromCol]=' ';
-
-                            }
-
-                  }
-
-                  else if(toRow==fromRow)
-                  {/******FOR HORIZONTAL MOVEMENT*************/
-                            int rhip;
-                            rhip = toCol - fromCol;
-                            int vhap = rhip -1 ;
-
-                            if(rhip <0)
-                            {  
-                                vhap = (-1)*rhip-1;
-                            }
-
-                            for(vhap; vhap>0; vhap--)
-                            {
-                                  if(rhip>0)
-                                  {
-                                      if(chess[1][fromRow][fromCol + vhap] == ' ')
-                                      continue;
-
-                                      else
-                                      {   
-                                          q =1;
-                                          if(printErrors == 0)
-                                            printf("ROOK CAN'T JUMP\n");/*******ERROR ERROR*********/
-                                          break;
-                                      }
-                                  }
-
-                                  else if(rhip<0)
-                                  {
-                                      if(chess[1][fromRow][fromCol - vhap] == ' ')
-                                      continue;
-
-                                      else
-                                      {
-                                          q =1;
-                                          if(printErrors == 0)
-                                            printf("ROOK CAN'T JUMP\n");/*******ERROR ERROR*********/
-                                          break;
-                                      }
-                                  }
-
-
-                            }
-
-                            if(chess[1][fromRow][fromCol] == chess[1][toRow][toCol] )
-                            {   
-                                q =1;
-                                vhap = 1;
-                                if(printErrors == 0)
-                                  printf("YOU CANNOT OVERRUN YOUR ARMY\n"); /************ERROR ERROR***************/
-                            }
-
-
-                            if(vhap ==0)
-                            {
-                                  chess[0][toRow][toCol]=chess[0][fromRow][fromCol];
-                                  chess[1][toRow][toCol]=chess[1][fromRow][fromCol];
-                                  chess[0][fromRow][fromCol]=chess[1][fromRow][fromCol]=' ';
-
-                            }
-
-                  }
-            
-                else
-                  {
-                      q =1;
-                      if(printErrors == 0)
-                        printf("INVALID MOVE FOR ROOK\n"); /*******ERROR ERROR*********/
-                    
-                  }
-
-
-        break;}/***END OF CASE 5 ***********/
-
-
-    default:
-          { 
-            q =1;
-            if(printErrors == 0)
-              printf("ROOK IS NOT AT THE SPECIFIED POSITION\n");/***********ERROR ERROR**************/
-          }
-
-  }/*******************************END OF ROOK**************************************/
-  return q;
-}
-
-int KnightRules(char ent1, int fromRow, int fromCol, int toRow, int toCol, int printErrors, char chess[2][8][8]){
-  int q = 0;
-  switch(chess[0][fromRow][fromCol])    
-    { case '2':/***CHECKS WHETHER KNIGHT IS THERE OR NOT******/
-          {     
-                if( (toRow == fromRow+2 || toRow == fromRow-2) && (toRow>=0 && toRow<=7) && (toCol == fromCol+1 || toCol == fromCol-1) && (toCol>=0 && toCol<=7) )
-                {/*******FOR VERTICAL MOVEMENT*************/
-                          if(chess[1][fromRow][fromCol] == chess[1][toRow][toCol] )
-                          {
-                              q =1;
-                              if(printErrors == 0)
-                                printf("YOU CANNOT OVERRUN YOUR ARMY\n"); /************ERROR ERROR***************/
-                          }
-                      
-
-                          else
-                          {
-                                chess[0][toRow][toCol]=chess[0][fromRow][fromCol];
-                                chess[1][toRow][toCol]=chess[1][fromRow][fromCol];
-                                chess[0][fromRow][fromCol]=chess[1][fromRow][fromCol]=' ';
-
-                          }
-                    
-                }
-            
-          
-              else if( (toRow == fromRow+1 || toRow == fromRow-1) && (toRow>=0 && toRow<=7) && (toCol == fromCol+2 || toCol== fromCol-2) && (toCol>=0 && toCol<=7) )
-                {/*********FOR HORIZONTAL MOVEMENT***********/
-                          if(chess[1][fromRow][fromCol] == chess[1][toRow][toCol] )
-                          {
-                              q =1;
-                              if(printErrors == 0)
-                                printf("YOU CANNOT OVERRUN YOUR ARMY\n");/************ERROR ERROR***************/
-                          }
-
-
-                          else
-                          {
-                                chess[0][toRow][toCol]=chess[0][fromRow][fromCol];
-                                chess[1][toRow][toCol]=chess[1][fromRow][fromCol];
-                                chess[0][fromRow][fromCol]=chess[1][fromRow][fromCol]=' ';
-
-                          }
-
-                }
-
-                else
-                {
-                          q =1;
-                          if(printErrors == 0)
-                            printf("YOUR KNIGHT MOVE IS ILLEGAL\n");/************ERROR ERROR***************/
-                }
-                
-  break;}/*BREAK OF CASE 2*/
-
-
-  default:
-        {
-          q =1;
-          if(printErrors == 0)
-            printf("KNIGHT IS NOT AT THE SPECIFIED POSITION\n");/************ERROR ERROR***************/
-        }
-  }       
-  return q;
-}
-
-
-
-
-
 /*
   Computes results of attempting a move
 
@@ -546,63 +324,34 @@ int compute(char ent1, int fromRow, int fromCol, int toRow, int toCol, int print
       break;
 
     case '2': // Piece is a Knight
-      q = KnightRules(ent1, fromRow, fromCol, toRow, toCol, printErrors, board);
+      q = checkKnightMove(ent1, fromRow, fromCol, toRow, toCol, printErrors, board);
       break;
 
-    case'3':/***************************************RULE OF NO-ENTITY 3 ****************************************/
-             {
-                   q =1;
-                   if(printErrors == 0)
-                     printf("THERE IS NO ENTITY 3\n");/************ERROR ERROR***************/
-
-             }break;/***********************************END OF NO-ENTITY 3 ****************************************/
-
-
-
-
-    case '4':/****************************************RULES OF BISHOP****************************************/
+    case '4': // Piece is a bishop
 	     q = checkBishopMove(ent1, fromRow, fromCol, toRow, toCol, printErrors, board);
 	     break;
 
-       case '5' : /******************************************RULES FOR ROOK*********************************/
-                {
-                q = RookRules(ent1, fromRow,fromCol,toRow,toCol, printErrors, board);
-        }break;
+    case '5': // Piece is a rook
+      q = checkRookMove(ent1, fromRow,fromCol,toRow,toCol, printErrors, board);
+      break;
 
+    case'7': // Piece is a queen
+      q = checkQueenMove(ent1, fromRow, fromCol, toRow, toCol, printErrors, board);
+      break;
 
+    case'9': // Piece is a king
+      q = checkKingMove(ent1, fromRow, fromCol, toRow, toCol, printErrors, board);
+      break;
 
-
-       case'6':/***************************************RULE OF NO-ENTITY 6 ****************************************/
-             {
-                   q =1;
-                   if(printErrors == 0)
-                     printf("THERE IS NO ENTITY 6\n");/************ERROR ERROR***************/
-
-             }break;/***********************************END OF NO-ENTITY 6 ****************************************/
-
-
-
-
-
-       case'7':/***************************************RULE OF QUEEN ****************************************/
-        q = checkQueenMove(ent1, fromRow, fromCol, toRow, toCol, printErrors, board);
-
-       case'9':/***************************************RULE OF KING ****************************************/
-	     q = checkKingMove(ent1, fromRow, fromCol, toRow, toCol, printErrors, board);
-
-	     break;/***********************************END OF KING **************************************/
-
-
-    default:
+    default: // Piece is not a valid entity
       if(printErrors == 0)
         printf("THERE IS NO ENTITY %c\n", ent1);
       break;
-  }/*****************END OF SWITCH(ENTITY)************************/
+  }
    
-    return q;
+    return q; // Return error value
 
-}/*END OF COMPUTE*/
-
+}
 
 // Checks that the pawn can move and performs it
 int checkPawnMove(int fromRow, int fromCol, int toRow, int toCol, int printErrors, char board[2][8][8]) {
@@ -757,6 +506,72 @@ int checkPawnMove(int fromRow, int fromCol, int toRow, int toCol, int printError
   }
 }
 
+int checkKnightMove(char ent1, int fromRow, int fromCol, int toRow, int toCol, int printErrors, char chess[2][8][8]){
+  int q = 0;
+  switch(chess[0][fromRow][fromCol])    
+    { case '2':/***CHECKS WHETHER KNIGHT IS THERE OR NOT******/
+          {     
+                if( (toRow == fromRow+2 || toRow == fromRow-2) && (toRow>=0 && toRow<=7) && (toCol == fromCol+1 || toCol == fromCol-1) && (toCol>=0 && toCol<=7) )
+                {/*******FOR VERTICAL MOVEMENT*************/
+                          if(chess[1][fromRow][fromCol] == chess[1][toRow][toCol] )
+                          {
+                              q =1;
+                              if(printErrors == 0)
+                                printf("YOU CANNOT OVERRUN YOUR ARMY\n"); /************ERROR ERROR***************/
+                          }
+                      
+
+                          else
+                          {
+                                chess[0][toRow][toCol]=chess[0][fromRow][fromCol];
+                                chess[1][toRow][toCol]=chess[1][fromRow][fromCol];
+                                chess[0][fromRow][fromCol]=chess[1][fromRow][fromCol]=' ';
+
+                          }
+                    
+                }
+            
+          
+              else if( (toRow == fromRow+1 || toRow == fromRow-1) && (toRow>=0 && toRow<=7) && (toCol == fromCol+2 || toCol== fromCol-2) && (toCol>=0 && toCol<=7) )
+                {/*********FOR HORIZONTAL MOVEMENT***********/
+                          if(chess[1][fromRow][fromCol] == chess[1][toRow][toCol] )
+                          {
+                              q =1;
+                              if(printErrors == 0)
+                                printf("YOU CANNOT OVERRUN YOUR ARMY\n");/************ERROR ERROR***************/
+                          }
+
+
+                          else
+                          {
+                                chess[0][toRow][toCol]=chess[0][fromRow][fromCol];
+                                chess[1][toRow][toCol]=chess[1][fromRow][fromCol];
+                                chess[0][fromRow][fromCol]=chess[1][fromRow][fromCol]=' ';
+
+                          }
+
+                }
+
+                else
+                {
+                          q =1;
+                          if(printErrors == 0)
+                            printf("YOUR KNIGHT MOVE IS ILLEGAL\n");/************ERROR ERROR***************/
+                }
+                
+  break;}/*BREAK OF CASE 2*/
+
+
+  default:
+        {
+          q =1;
+          if(printErrors == 0)
+            printf("KNIGHT IS NOT AT THE SPECIFIED POSITION\n");/************ERROR ERROR***************/
+        }
+  }       
+  return q;
+}
+
 int checkBishopMove(char ent1, int fromRow, int fromCol, int toRow, int toCol, int printErrors, char board[2][8][8]){
 
    int q = 0;
@@ -872,6 +687,159 @@ int checkBishopMove(char ent1, int fromRow, int fromCol, int toRow, int toCol, i
    
    return q;
 
+}
+
+int checkRookMove(char ent1, int fromRow, int fromCol, int toRow, int toCol, int printErrors, char chess[2][8][8]) {
+  int q = 0;
+  switch(chess[0][fromRow][fromCol]){ 
+    case '5':/***CHECKS WHETHER ROOK IS THERE OR NOT******/
+            {
+                  if(toCol==fromCol)
+                  {/*******FOR VERTICAL MOVEMENT*************/
+                            int rip;
+                            rip = toRow - fromRow;
+                            int vap = rip-1;           
+
+                            if(rip <0)
+                            {
+                                vap = (-1)*rip-1;
+                            }
+
+                            for(vap; vap>0; vap--)
+                            { 
+                                  if(rip>0)
+                                  {   
+                                      if(chess[1][fromRow + vap][fromCol] == ' ')
+                                      continue;
+
+                                      else
+                                      {  
+                                          q =1; 
+                                          if(printErrors == 0)
+                                            printf("ROOK CAN'T JUMP\n");/*******ERROR ERROR*********/
+                                          break;
+                                      }
+                                  }
+
+                                  else if(rip<0)
+                                  {
+                                      if(chess[1][fromRow - vap][fromCol] == ' ')
+                                      continue;
+            
+                                      else
+                                      {
+                                          q =1;
+                                          if(printErrors == 0)
+                                            printf("ROOK CAN'T JUMP\n");/*******ERROR ERROR*********/
+                                          break;
+                                      }
+                                  }
+
+                            }
+
+                            if(chess[1][fromRow][fromCol] == chess[1][toRow][toCol] )
+                            {
+                                q =1;
+                                vap = 1;
+                                if(printErrors == 0)
+                                  printf("YOU CANNOT OVERRUN YOUR ARMY\n");/************ERROR ERROR***************/
+                            }
+
+
+                            if(vap ==0)
+                            {
+                                  chess[0][toRow][toCol]=chess[0][fromRow][fromCol];
+                                  chess[1][toRow][toCol]=chess[1][fromRow][fromCol];
+                                  chess[0][fromRow][fromCol]=chess[1][fromRow][fromCol]=' ';
+
+                            }
+
+                  }
+
+                  else if(toRow==fromRow)
+                  {/******FOR HORIZONTAL MOVEMENT*************/
+                            int rhip;
+                            rhip = toCol - fromCol;
+                            int vhap = rhip -1 ;
+
+                            if(rhip <0)
+                            {  
+                                vhap = (-1)*rhip-1;
+                            }
+
+                            for(vhap; vhap>0; vhap--)
+                            {
+                                  if(rhip>0)
+                                  {
+                                      if(chess[1][fromRow][fromCol + vhap] == ' ')
+                                      continue;
+
+                                      else
+                                      {   
+                                          q =1;
+                                          if(printErrors == 0)
+                                            printf("ROOK CAN'T JUMP\n");/*******ERROR ERROR*********/
+                                          break;
+                                      }
+                                  }
+
+                                  else if(rhip<0)
+                                  {
+                                      if(chess[1][fromRow][fromCol - vhap] == ' ')
+                                      continue;
+
+                                      else
+                                      {
+                                          q =1;
+                                          if(printErrors == 0)
+                                            printf("ROOK CAN'T JUMP\n");/*******ERROR ERROR*********/
+                                          break;
+                                      }
+                                  }
+
+
+                            }
+
+                            if(chess[1][fromRow][fromCol] == chess[1][toRow][toCol] )
+                            {   
+                                q =1;
+                                vhap = 1;
+                                if(printErrors == 0)
+                                  printf("YOU CANNOT OVERRUN YOUR ARMY\n"); /************ERROR ERROR***************/
+                            }
+
+
+                            if(vhap ==0)
+                            {
+                                  chess[0][toRow][toCol]=chess[0][fromRow][fromCol];
+                                  chess[1][toRow][toCol]=chess[1][fromRow][fromCol];
+                                  chess[0][fromRow][fromCol]=chess[1][fromRow][fromCol]=' ';
+
+                            }
+
+                  }
+            
+                else
+                  {
+                      q =1;
+                      if(printErrors == 0)
+                        printf("INVALID MOVE FOR ROOK\n"); /*******ERROR ERROR*********/
+                    
+                  }
+
+
+        break;}/***END OF CASE 5 ***********/
+
+
+    default:
+          { 
+            q =1;
+            if(printErrors == 0)
+              printf("ROOK IS NOT AT THE SPECIFIED POSITION\n");/***********ERROR ERROR**************/
+          }
+
+  }/*******************************END OF ROOK**************************************/
+  return q;
 }
 
 int checkQueenMove(char ent1, int fromRow, int fromCol, int toRow, int toCol, int printErrors, char board[2][8][8]){
