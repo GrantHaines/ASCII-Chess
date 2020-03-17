@@ -589,7 +589,7 @@ int compute(char ent1, int fromRow, int fromCol, int toRow, int toCol, int print
 
 
        case'7':/***************************************RULE OF QUEEN ****************************************/
-        q = checkQueenMove(ent1, fromRow, fromCOl, toRow, toCol, printErrors, board);
+        q = checkQueenMove(ent1, fromRow, fromCol, toRow, toCol, printErrors, board);
 
        case'9':/***************************************RULE OF KING ****************************************/
 	     q = checkKingMove(ent1, fromRow, fromCol, toRow, toCol, printErrors, board);
