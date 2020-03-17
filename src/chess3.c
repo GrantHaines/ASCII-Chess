@@ -29,6 +29,8 @@ int checkBishopMove(char ent1, int fromRow, int fromCol, int toRow, int toCol, i
 
 int checkKingMove(char ent1, int fromRow, int fromCol, int toRow, int toCol, int printErrors, char chess[2][8][8]);
 
+int checkQueenMove(char ent1, int fromRow, int fromCol, int toRow, int toCol, int printErrors, char chess[2][8][8]);
+
 // Prints the game board & instructions
 void printing(char chp [2][8][8]);
 
@@ -583,256 +585,7 @@ int compute(char ent1, int fromRow, int fromCol, int toRow, int toCol, int print
 
 
        case'7':/***************************************RULE OF QUEEN ****************************************/
-             switch(board[0][fromRow][fromCol])/***CHECKS WHETHER QUEEN IS THERE OR NOT******/
-                 { case'7':
-                           {
-                         
-                            if(toCol==fromCol)
-                             {/*******FOR VERTICAL MOVEMENT*************/
-                                        int rip;
-                                        rip = toRow - fromRow;
-                                        int vap = rip-1;
-
-                                        if(rip <0)
-                                        {  
-                                           vap = (-1)*rip-1;
-                                        }
-
-                                        for(vap; vap>0; vap--)
-                                        {
-                                             if(rip>0)
-                                             {
-                                                  if(board[1][fromRow + vap][fromCol] == ' ')
-                                                  continue;
-
-                                                  else
-                                                  {   
-                                                      q =1;
-                                                      if(printErrors == 0)
-                                                        printf("QUEEN CAN'T JUMP\n");/*******ERROR ERROR*********/
-                                                      break;
-                                                  }
-                                             }
-
-                                             else if(rip<0)
-                                             {
-                                                  if(board[1][fromRow - vap][fromCol] == ' ')
-                                                  continue;
-
-                                                  else
-                                                  {
-                                                      q =1;
-                                                      if(printErrors == 0)
-                                                        printf("QUEEN CAN'T JUMP\n");/*******ERROR ERROR*********/
-                                                      break;
-                                                  }
-                                             }
-
-                                        }
-
-                                        if(board[1][fromRow][fromCol] == board[1][toRow][toCol] )
-                                        {
-                                            q =1;
-                                            vap = 1;
-                                            if(printErrors == 0)
-                                              printf("YOU CANNOT OVERRUN YOUR ARMY\n");/************ERROR ERROR***************/
-                                        }
-
-
-                                        if(vap ==0)
-                                        {
-                                             board[0][toRow][toCol]=board[0][fromRow][fromCol];
-                                             board[1][toRow][toCol]=board[1][fromRow][fromCol];
-                                             board[0][fromRow][fromCol]=board[1][fromRow][fromCol]=' ';
-
-                                        }
-
-                             }
-
-                             else if(toRow==fromRow)
-                             {/******FOR HORIZONTAL MOVEMENT*************/
-                                        int rhip;
-                                        rhip = toCol - fromCol;
-                                        int vhap = rhip -1 ;
-
-                                        if(rhip <0)
-                                        {
-                                           vhap = (-1)*rhip-1;
-                                        }
-
-                                        for(vhap; vhap>0; vhap--)
-                                        {
-                                             if(rhip>0)
-                                             {
-                                                  if(board[1][fromRow][fromCol + vhap] == ' ')
-                                                  continue;
-
-                                                  else
-                                                  {
-                                                      q =1;
-                                                      if(printErrors == 0)
-                                                        printf("QUEEN CAN'T JUMP\n");/*******ERROR ERROR*********/
-                                                      break;
-                                                  }
-                                             }
-
-                                             else if(rhip<0)
-                                             {
-                                                  if(board[1][fromRow][fromCol - vhap] == ' ')
-                                                  continue;
-
-                                                  else
-                                                  {
-                                                      q =1;
-                                                      if(printErrors == 0)
-                                                        printf("QUEEN CAN'T JUMP\n");/*******ERROR ERROR*********/
-                                                      break;
-                                                  }
-                                             }
-
-
-                                        }
-
-                                        if(board[1][fromRow][fromCol] == board[1][toRow][toCol] )
-                                        {
-                                            q =1;
-                                            vhap = 1;
-                                            if(printErrors == 0)
-                                              printf("YOU CANNOT OVERRUN YOUR ARMY\n"); /************ERROR ERROR***************/
-                                        }
-
-
-                                        if(vhap ==0)
-                                        {
-                                             board[0][toRow][toCol]=board[0][fromRow][fromCol];
-                                             board[1][toRow][toCol]=board[1][fromRow][fromCol];
-                                             board[0][fromRow][fromCol]=board[1][fromRow][fromCol]=' ';
-
-                                        }
-
-                              }
-                         
- 
-                              else
-                              {    int bis;
-                                   bis = toRow - fromRow;
-                                   /*printf("%d\n",bis);*/
-
-                                   if(toCol == bis + fromCol || toCol == (-1)*bis + fromCol)
-                                   {      int var = bis - 1;
-
-
-                                          if(bis < 0){
-                                               var = (-1)*bis -1;
-                                           }
-
-                                          for(var; var >0; var--)
-                                          {
-                                               if(bis > 0 && toCol > fromCol)
-                                               {
-                                                   if(board[1][fromRow+var][fromCol+var] == ' ')
-                                                   continue;
-
-                                                   else
-                                                   {
-                                                       q =1;
-                                                       if(printErrors == 0)
-                                                         printf("QUEEN CAN'T JUMP\n");/*******ERROR ERROR*********/
-                                                       break;
-                                                   }
-                                               }
-
-                                               else if(bis > 0 && toCol < fromCol)
-                                               {
-                                                   if(board[1][fromRow+var][fromCol-var] == ' ')
-                                                   continue;
-
-                                                   else
-                                                   {
-						       q =1;
-                                                       if(printErrors == 0)
-                                                         printf("QUEEN CAN'T JUMP\n");/*******ERROR ERROR*********/
-                                                       break;
-                                                   }
-                                               }
-
-                                               else if(bis < 0 && toCol > fromCol)
-                                               {   
-                                                   if(board[1][fromRow-var][fromCol+var] == ' ')
-                                                   continue;
-
-                                                   else
-                                                   {   
-                                                       q =1;
-                                                       if(printErrors == 0)
-                                                         printf("QUEEN CAN'T JUMP\n");/*******ERROR ERROR*********/
-                                                       break;
-
-                                                   }
-                                               }
-
-                                               if(bis < 0 && toCol < fromCol)
-                                               {   
-                                                   if(board[1][fromRow-var][fromCol-var] == ' ')
-                                                   continue;
-
-                                                   else
-                                                   {   
-                                                       q =1;
-                                                       if(printErrors == 0)
-                                                         printf("QUEEN CAN'T JUMP\n");/*******ERROR ERROR*********/
-                                                       break;
-
-                                                   }
-                                               }
-
-                                          }
-
-
-                                          if(board[1][fromRow][fromCol] == board[1][toRow][toCol])
-                                          {
-                                              q =1;
-                                              var = 1;
-                                              if(printErrors == 0)
-                                                printf("YOU CANNOT OVERRUN YOUR ARMY\n"); /************ERROR ERROR***************/
-                                          }
-
-
-                                          if(var == 0)
-                                          {
-                                              board[0][toRow][toCol]=board[0][fromRow][fromCol];
-                                              board[1][toRow][toCol]=board[1][fromRow][fromCol];
-                                              board[0][fromRow][fromCol]=board[1][fromRow][fromCol]=' ';
-
-                                          }
-
-                                   }
-
-                                   else
-                                   {
-                                            q =1;
-                                            if(printErrors == 0)
-                                              printf("INVALID MOVE FOR QUEEN\n");/*******ERROR ERROR*********/
-                                   }
-
-                              }
-
-
-                  break;}/********END OF CASE 7 ************/
-
-
-
-                default:
-                      {
-                        q =1;
-                        if(printErrors == 0)
-                          printf("QUEEN IS NOT AT THE SPECIFIED POSITION\n");/***********ERROR ERROR**************/
-                      }
-                 
-              }break;/***********************************END OF QUEEN ****************************************/
-
-
-
+        q = checkQueenMove(ent1, fromRow, fromCol, toRow, toCol, printErrors, board);
 
        case'9':/***************************************RULE OF KING ****************************************/
 	     q = checkKingMove(ent1, fromRow, fromCol, toRow, toCol, printErrors, board);
@@ -1118,6 +871,195 @@ int checkBishopMove(char ent1, int fromRow, int fromCol, int toRow, int toCol, i
    }
    
    return q;
+
+}
+
+int checkQueenMove(char ent1, int fromRow, int fromCol, int toRow, int toCol, int printErrors, char board[2][8][8]){
+ 
+  int q;
+
+  switch(board[0][fromRow][fromCol]){             /***CHECKS WHETHER QUEEN IS THERE OR NOT******/
+    case'7': {                   
+      if(toCol==fromCol) {                        /*******FOR VERTICAL MOVEMENT*************/
+        int rip;
+        rip = toRow - fromRow;
+          int vap = rip-1;
+
+          if(rip <0) {  
+              vap = (-1)*rip-1;
+          }
+
+            for(vap; vap>0; vap--) {
+            if(rip>0) {
+              if(board[1][fromRow + vap][fromCol] == ' ')
+                continue;
+              else {   
+                q =1;
+                if(printErrors == 0)
+                  printf("QUEEN CAN'T JUMP\n");       /*******ERROR ERROR*********/
+                break;
+              }
+            }
+            else if(rip<0) {
+              if(board[1][fromRow - vap][fromCol] == ' ')
+                continue;
+              else {
+                q =1;
+                if(printErrors == 0)
+                  printf("QUEEN CAN'T JUMP\n");       /*******ERROR ERROR*********/
+                  break;
+                }
+            }
+          }
+
+        if(board[1][fromRow][fromCol] == board[1][toRow][toCol] ) {
+          q =1;
+          vap = 1;
+
+          if(printErrors == 0)
+            printf("YOU CANNOT OVERRUN YOUR ARMY\n");/************ERROR ERROR***************/
+        }
+
+        if(vap ==0) {
+          board[0][toRow][toCol]=board[0][fromRow][fromCol];
+          board[1][toRow][toCol]=board[1][fromRow][fromCol];
+          board[0][fromRow][fromCol]=board[1][fromRow][fromCol]=' ';
+        }
+      }
+    
+      else if(toRow==fromRow) {                     /******FOR HORIZONTAL MOVEMENT*************/
+        int rhip;
+        rhip = toCol - fromCol;
+        int vhap = rhip -1 ;
+
+        if(rhip <0) {
+          vhap = (-1)*rhip-1;
+        }
+
+        for(vhap; vhap>0; vhap--) {
+          if(rhip>0) {
+            if(board[1][fromRow][fromCol + vhap] == ' ')
+              continue;
+            else {
+              q =1;
+              if(printErrors == 0)
+                printf("QUEEN CAN'T JUMP\n");/*******ERROR ERROR*********/
+            break;
+            }
+          }
+          else if(rhip<0) {
+            if(board[1][fromRow][fromCol - vhap] == ' ')
+              continue;
+            else {
+              q =1;
+              if(printErrors == 0)
+                printf("QUEEN CAN'T JUMP\n");/*******ERROR ERROR*********/
+              break;
+            }
+          } 
+        }
+
+        if(board[1][fromRow][fromCol] == board[1][toRow][toCol] ) {
+          q =1;
+          vhap = 1;
+          if(printErrors == 0)
+            printf("YOU CANNOT OVERRUN YOUR ARMY\n"); /************ERROR ERROR***************/
+        }
+
+        if(vhap ==0) {
+          board[0][toRow][toCol]=board[0][fromRow][fromCol];
+          board[1][toRow][toCol]=board[1][fromRow][fromCol];
+          board[0][fromRow][fromCol]=board[1][fromRow][fromCol]=' ';
+        }
+      }
+
+      else {
+        int bis;
+          bis = toRow - fromRow;
+          /*printf("%d\n",bis);*/
+        if(toCol == bis + fromCol || toCol == (-1)*bis + fromCol) {
+          int var = bis - 1;
+          if(bis < 0){
+            var = (-1)*bis -1;
+          }
+          for(var; var >0; var--) {
+            if(bis > 0 && toCol > fromCol) {
+              if(board[1][fromRow+var][fromCol+var] == ' ')
+                continue;
+              else {
+                q =1;
+                if(printErrors == 0)
+                  printf("QUEEN CAN'T JUMP\n");/*******ERROR ERROR*********/
+                break;
+              }
+            }
+            else if(bis > 0 && toCol < fromCol) {
+              if(board[1][fromRow+var][fromCol-var] == ' ')
+                continue;
+              else {
+  					    q =1;
+                if(printErrors == 0)
+                  printf("QUEEN CAN'T JUMP\n");/*******ERROR ERROR*********/
+                break;
+              }
+            }
+            else if(bis < 0 && toCol > fromCol) {   
+              if(board[1][fromRow-var][fromCol+var] == ' ')
+                continue;
+              else {   
+                q =1;
+                if(printErrors == 0)
+                  printf("QUEEN CAN'T JUMP\n");/*******ERROR ERROR*********/
+                break;
+              }
+            }
+
+          if(bis < 0 && toCol < fromCol) {   
+            if(board[1][fromRow-var][fromCol-var] == ' ')
+              continue;
+            else {   
+              q =1;
+              if(printErrors == 0)
+                printf("QUEEN CAN'T JUMP\n");/*******ERROR ERROR*********/
+              break;
+            }
+          }
+        }
+
+        if(board[1][fromRow][fromCol] == board[1][toRow][toCol]) {
+          q =1;
+          var = 1;
+          if(printErrors == 0)
+            printf("YOU CANNOT OVERRUN YOUR ARMY\n"); /************ERROR ERROR***************/
+        }
+
+        if(var == 0) {
+          board[0][toRow][toCol]=board[0][fromRow][fromCol];
+          board[1][toRow][toCol]=board[1][fromRow][fromCol];
+          board[0][fromRow][fromCol]=board[1][fromRow][fromCol]=' ';
+        }
+      }
+  
+        else {
+          q =1;
+          if(printErrors == 0)
+            printf("INVALID MOVE FOR QUEEN\n");/*******ERROR ERROR*********/
+        }
+      }
+    
+    break; 
+  }                              /********END OF CASE 7 ************/
+    
+  default: {
+    q =1;
+    if(printErrors == 0)
+      printf("QUEEN IS NOT AT THE SPECIFIED POSITION\n");/***********ERROR ERROR**************/
+    }           
+  }
+  
+  return q;
+  
+  /***********************************END OF QUEEN ****************************************/
 
 }
 
